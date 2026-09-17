@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './styles.css';
 
 const FIVERR_URL = 'https://www.fiverr.com/s/432lpeR';
-const BONSai_IMAGE = '/assets/bonsi.jpeg';
+const BONSai_IMAGE = './assets/bonsi.jpeg';
 
 const projects = [
   { n: '01', name: 'ROYAL TOUCH', type: 'Mobile car wash website', tags: 'Brand · UI · Conversion', tone: 'silver' },
@@ -150,7 +150,6 @@ function App() {
   return (
     <div className="site">
       <BonsaiHero />
-
       <main>
         <section className="content-section about-section" id="about">
           <SectionHead number="01" title="ABOUT" aside="SHAPED WITH RESTRAINT" />
@@ -225,29 +224,28 @@ function App() {
 
         <section className="content-section toolkit-section">
           <SectionHead number="05" title="TOOLKIT" aside="THE MATERIALS" />
-          <div className="tool-marquee" aria-label="Toolkit">
-            <div>{[...toolkit, ...toolkit].map((tool, index) => <span key={`${tool}-${index}`}>{tool}</span>)}</div>
+          <div className="toolkit-marquee" aria-hidden="true">
+            <div className="toolkit-track">
+              {[...toolkit, ...toolkit].map((tool, index) => <span key={`${tool}-${index}`}>{tool} <i>✳</i></span>)}
+            </div>
           </div>
         </section>
 
-        <section className="content-section contact-section" id="contact">
-          <div className="contact-image" style={{ backgroundImage: `url(${BONSai_IMAGE})` }} />
-          <div className="contact-darken" />
+        <section className="contact-section" id="contact">
+          <div className="contact-photo" style={{ backgroundImage: `url(${BONSai_IMAGE})` }} />
+          <div className="contact-overlay" />
+          <SectionHead number="06" title="CONTACT" aside="LET'S BUILD SOMETHING QUIETLY DISTINCT" />
           <div className="contact-content">
-            <SectionHead number="06" title="CONTACT" aside="LET'S MAKE IT CLEAR" />
-            <div className="contact-lockup">
-              <span>HAVE SOMETHING WORTH BUILDING?</span>
-              <h2>Let's make<br /><em>it beautiful.</em></h2>
-              <div className="contact-actions">
-                <a href={FIVERR_URL} target="_blank" rel="noreferrer">START A PROJECT ↗</a>
-                <a href={FIVERR_URL} target="_blank" rel="noreferrer">FIVERR ↗</a>
-              </div>
+            <p className="contact-kicker">HAVE SOMETHING WORTH BUILDING?</p>
+            <h2>Let's make<br /><em>it clear.</em></h2>
+            <div className="contact-actions">
+              <a href={FIVERR_URL} target="_blank" rel="noreferrer">START A PROJECT ↗</a>
+              <a href={FIVERR_URL} target="_blank" rel="noreferrer">FIVERR ↗</a>
             </div>
           </div>
         </section>
       </main>
-
-      <footer className="footer">
+      <footer>
         <span>B1O / WEB</span>
         <span>DESIGN · BUILD · REFINE</span>
         <span>© 2026</span>
