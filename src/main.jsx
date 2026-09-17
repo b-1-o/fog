@@ -8,7 +8,7 @@ const BONSai_IMAGE = '/assets/bonsi.jpeg';
 const projects = [
   { n: '01', name: 'ROYAL TOUCH', type: 'Mobile car wash website', tags: 'Brand · UI · Conversion', tone: 'silver' },
   { n: '02', name: 'B1O', type: 'Experimental digital interface', tags: 'Product · Motion · Software', tone: 'pink' },
-  { n: '03', name: 'FOG', type: 'Immersive portfolio study', tags: 'WebGL · Atmosphere · Interaction', tone: 'dark' },
+  { n: '03', name: 'FOG', type: 'Immersive portfolio study', tags: 'Atmosphere · Interaction · Visuals', tone: 'dark' },
 ];
 
 const services = [
@@ -37,10 +37,9 @@ function useSmoothScrollProgress(sectionRef) {
     const update = () => {
       const el = sectionRef.current;
       if (!el) return;
-      const rect = el.getBoundingClientRect();
       const total = Math.max(1, el.offsetHeight - window.innerHeight);
-      const value = Math.min(1, Math.max(0, -rect.top / total));
-      setProgress(value);
+      const rect = el.getBoundingClientRect();
+      setProgress(Math.min(1, Math.max(0, -rect.top / total)));
       raf = 0;
     };
 
@@ -88,15 +87,15 @@ function BonsaiHero() {
   }, []);
 
   const style = useMemo(() => ({
-    '--hero-progress': progress,
-    '--mouse-x': `${mouse.x}`,
-    '--mouse-y': `${mouse.y}`,
+    '--mouse-x': `${mouse.x * -18}px`,
+    '--mouse-y': `${mouse.y * -12}px`,
+    '--image-scale': String(1.02 + progress * 0.12),
   }), [progress, mouse]);
 
   return (
-    <section ref={sectionRef} className="hero-stage" id="home" style={style}>
+    <section ref={sectionRef} className="hero-stage" id="home">
       <div className="hero-sticky">
-        <div className="hero-photo" aria-hidden="true">
+        <div className="hero-photo" style={style} aria-hidden="true">
           <img src={BONSai_IMAGE} alt="" />
         </div>
         <div className="hero-photo-glass" aria-hidden="true" />
@@ -138,9 +137,9 @@ function BonsaiHero() {
   );
 }
 
-function SectionHead({ number, title, aside, dark = true }) {
+function SectionHead({ number, title, aside }) {
   return (
-    <div className={`section-head ${dark ? 'section-head-dark' : ''}`}>
+    <div className="section-head">
       <span>{number} / {title}</span>
       <span>{aside}</span>
     </div>
