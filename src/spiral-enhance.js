@@ -1,324 +1,262 @@
 (() => {
   const CARDS = [
-    {
-      number: '01',
-      eyebrow: 'WHAT I BUILD',
-      title: 'PROJECTS',
-      tag: 'WORK / SELECTED',
-      image: 'https://raw.githubusercontent.com/b-1-o/my/main/assets/09-tech-startup%20(1).png',
-      intro: 'A look at the things I actually build — from business websites to immersive interfaces and visual experiments.',
-      details: ['Royal Touch — business website direction', 'FOG — this portfolio / visual experiment', 'Landing pages, responsive interfaces and redesigns'],
-      meta: 'WEB · UI · RESPONSIVE',
-    },
-    {
-      number: '02',
-      eyebrow: 'THE STACK',
-      title: 'TOOLS + CODE',
-      tag: 'STACK / CURRENT',
-      image: 'https://raw.githubusercontent.com/b-1-o/my/main/assets/08-architect%20(1).png',
-      intro: 'The languages, frameworks and tools used to turn a visual idea into a real interface.',
-      details: ['HTML · CSS · JavaScript', 'TypeScript · React · Next.js', 'Vite · Git · Linux · Framer Motion'],
-      meta: 'FRONTEND · SYSTEMS · MOTION',
-    },
-    {
-      number: '03',
-      eyebrow: 'CURRENTLY EXPLORING',
-      title: 'LEARNING',
-      tag: 'LAB / NOW',
-      image: 'https://raw.githubusercontent.com/b-1-o/my/main/assets/01-graphic-designer%20(1).png',
-      intro: 'What is getting deliberate attention right now: cleaner architecture, richer interactions and lighter builds.',
-      details: ['Advanced React architecture', 'TypeScript depth and data flow', 'Interaction, motion and frontend performance'],
-      meta: 'STUDY · TEST · REFINE',
-    },
-    {
-      number: '04',
-      eyebrow: 'THE PERSON BEHIND IT',
-      title: 'ABOUT ME',
-      tag: 'PROFILE / APPROACH',
-      image: 'https://raw.githubusercontent.com/b-1-o/my/main/assets/04-photographer%20(1).png',
-      intro: 'I care about hierarchy, atmosphere and the small details that make a digital product feel deliberate.',
-      details: ['Focus — web / UI', 'Style — minimal / immersive', 'Approach — design · build · refine'],
-      meta: 'CLARITY · DETAIL · RESTRAINT',
-    },
-    {
-      number: '05',
-      eyebrow: 'FOR CLIENTS',
-      title: 'SERVICES',
-      tag: 'OFFER / WEB',
-      image: 'https://raw.githubusercontent.com/b-1-o/my/main/assets/05-law-firm%20(1).png',
-      intro: 'From a first layout to a polished responsive delivery, the goal stays simple: make the important thing obvious.',
-      details: ['Custom websites', 'Landing pages and redesigns', 'Responsive UI · visual design · performance'],
-      meta: 'BUILD · REDESIGN · DELIVERY',
-    },
-    {
-      number: '06',
-      eyebrow: 'SIDE LAB',
-      title: 'EXPERIMENTS',
-      tag: 'LAB / PLAY',
-      image: 'https://raw.githubusercontent.com/b-1-o/my/main/assets/10-florist%20(1).png',
-      intro: 'Motion, glass, depth and small interactions built because interesting interfaces are worth exploring.',
-      details: ['Layered photography and depth', 'Canvas snowfall and atmosphere', 'Glass surfaces and scene transitions'],
-      meta: 'MOTION · DEPTH · ATMOSPHERE',
-    },
+    { n: '01', label: 'PROJECTS', tag: 'WORK / SELECTED', image: './assets/bonsi.jpeg', position: '72% 42%', title: 'Projects', accent: 'Builds with a point of view.', text: 'Business websites, immersive interfaces and visual experiments built around clarity, rhythm and useful interaction.', items: ['Royal Touch — business website direction', 'FOG — this portfolio / visual experiment', 'Landing pages, responsive interfaces and redesigns'], meta: 'WEB · UI · RESPONSIVE' },
+    { n: '02', label: 'TOOLS + CODE', tag: 'STACK / CURRENT', image: './assets/ssakura.jpg', position: '58% 28%', title: 'Tools + Code', accent: 'The machinery behind the image.', text: 'The frontend stack I use to turn a visual direction into a responsive, maintainable interface.', items: ['HTML · CSS · JavaScript', 'TypeScript · React · Next.js', 'Vite · Git · Linux · Framer Motion'], meta: 'FRONTEND · SYSTEMS · MOTION' },
+    { n: '03', label: 'LEARNING', tag: 'LAB / NOW', image: './assets/bonsi.jpeg', position: '35% 25%', title: 'Learning', accent: 'Always one layer deeper.', text: 'Current study is focused on stronger architecture, better interactions and making every build lighter and more intentional.', items: ['Advanced React architecture', 'TypeScript depth and data flow', 'Interaction, motion and frontend performance'], meta: 'STUDY · TEST · REFINE' },
+    { n: '04', label: 'ABOUT ME', tag: 'PROFILE / APPROACH', image: './assets/ssakura.jpg', position: '32% 58%', title: 'About Me', accent: 'Less noise. More intent.', text: 'I care about hierarchy, atmosphere and the small details that make a digital product feel considered rather than decorated.', items: ['Focus — web / UI', 'Style — minimal / immersive', 'Approach — design · build · refine'], meta: 'CLARITY · DETAIL · RESTRAINT' },
+    { n: '05', label: 'SERVICES', tag: 'OFFER / WEB', image: './assets/bonsi.jpeg', position: '86% 67%', title: 'Services', accent: 'From first frame to final pass.', text: 'A practical set of services for small businesses and independent brands that need a polished web presence.', items: ['Custom websites', 'Landing pages and redesigns', 'Responsive UI · visual design · performance'], meta: 'BUILD · REDESIGN · DELIVERY' },
+    { n: '06', label: 'EXPERIMENTS', tag: 'LAB / PLAY', image: './assets/ssakura.jpg', position: '78% 78%', title: 'Experiments', accent: 'Make the interface breathe.', text: 'Motion, glass, depth and tiny interactions built because the web becomes more interesting when it can feel cinematic.', items: ['Layered photography and depth', 'Canvas snowfall and atmosphere', 'Glass surfaces and scene transitions'], meta: 'MOTION · DEPTH · ATMOSPHERE' },
+    { n: '07', label: 'DIRECTION', tag: 'VISUAL / MOOD', image: './assets/bonsi.jpeg', position: '56% 86%', title: 'Direction', accent: 'A quiet visual language.', text: 'Monochrome photography, restrained pink, glass surfaces and editorial typography form the visual language of this portfolio.', items: ['Monochrome imagery', 'Smoked glass surfaces', 'Editorial typography + restrained motion'], meta: 'IMAGE · TYPE · ATMOSPHERE' },
   ];
 
-  const esc = (value) => String(value).replace(/[&<>"']/g, (char) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
-  }[char]));
-
-  const css = `
-    .fog-spiral-wrap{position:relative;min-height:980px;background:linear-gradient(180deg,#08080b 0%,#050507 52%,#07070a 100%);border-top:1px solid rgba(255,255,255,.06);overflow:hidden;isolation:isolate}
-    .fog-spiral-wrap:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 72% 43%,rgba(255,255,255,.085),transparent 17%),radial-gradient(circle at 35% 66%,rgba(217,160,179,.055),transparent 25%);pointer-events:none}
-    .fog-spiral-wrap:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(3,3,5,.95) 0%,rgba(3,3,5,.68) 25%,transparent 55%,rgba(3,3,5,.5) 100%);pointer-events:none;z-index:2}
-    .fog-spiral-copy{position:absolute;z-index:8;left:7vw;top:110px;width:min(360px,30vw)}
-    .fog-spiral-copy>span,.fog-spiral-detail>span,.fog-spiral-card-copy small{font:500 8px 'DM Mono',monospace;letter-spacing:.13em;color:rgba(255,255,255,.43)}
-    .fog-spiral-copy h2{margin:28px 0 24px;font-size:clamp(48px,6vw,92px);line-height:.87;letter-spacing:-.07em;font-weight:500}
-    .fog-spiral-copy h2 i{font-family:'Playfair Display',Georgia,serif;font-weight:400}
-    .fog-spiral-copy p{margin:0;max-width:335px;color:#85868d;font-size:14px;line-height:1.75}
-    .fog-spiral-copy .hint{display:inline-flex;align-items:center;gap:10px;margin-top:34px;padding:10px 13px;border:1px solid rgba(255,255,255,.1);border-radius:999px;background:rgba(255,255,255,.03);font:500 8px 'DM Mono';letter-spacing:.1em;color:#72737a;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-    .fog-spiral-copy .hint i{width:5px;height:5px;border-radius:50%;background:var(--pink,#d9a0b3);box-shadow:0 0 12px rgba(217,160,179,.8)}
-    .fog-spiral-stage{position:absolute;z-index:5;left:67%;top:50%;width:910px;height:910px;transform:translate(-50%,-50%) rotateX(-4deg) rotateY(-8deg);transform-style:preserve-3d;perspective:1800px}
-    .fog-spiral-scene{position:absolute;inset:0;cursor:ns-resize;touch-action:pan-y;user-select:none;overflow:hidden}
-    .fog-spiral-axis{position:absolute;left:50%;top:6%;width:1px;height:88%;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.06) 16%,rgba(255,255,255,.17) 50%,rgba(255,255,255,.06) 84%,transparent);box-shadow:0 0 34px rgba(255,255,255,.1);opacity:.7;pointer-events:none}
-    .fog-spiral-ring{position:absolute;left:50%;top:50%;width:530px;height:660px;margin:-330px 0 0 -265px;border:1px solid rgba(255,255,255,.045);border-radius:50%;transform:rotateX(76deg) rotateZ(24deg);box-shadow:0 0 90px rgba(255,255,255,.025);pointer-events:none}
-    .fog-spiral-card{--angle:0deg;--lift:0px;--radius:310px;--scale:1;--alpha:1;--blur:0px;--tilt:0deg;position:absolute;left:50%;top:50%;width:292px;height:184px;margin:-92px 0 0 -146px;padding:7px;border:1px solid rgba(255,255,255,.22);border-radius:20px;background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.035));box-shadow:0 34px 100px rgba(0,0,0,.58),inset 0 1px 0 rgba(255,255,255,.22);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);transform-style:preserve-3d;transform:rotateY(var(--angle)) translateZ(var(--radius)) translateY(var(--lift)) rotateY(calc(var(--angle) * -1)) rotateZ(var(--tilt)) scale(var(--scale));opacity:var(--alpha);filter:blur(var(--blur));will-change:transform,opacity,filter;transition:border-color .3s,box-shadow .3s;cursor:pointer;outline:0}
-    .fog-spiral-card:before{content:"";position:absolute;inset:0;border-radius:20px;background:linear-gradient(125deg,rgba(255,255,255,.14),transparent 24%,transparent 72%,rgba(217,160,179,.05));pointer-events:none;z-index:3}
-    .fog-spiral-card:after{content:"";position:absolute;inset:-1px;border-radius:21px;padding:1px;background:linear-gradient(125deg,rgba(255,255,255,.58),transparent 26%,transparent 70%,rgba(217,160,179,.18));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:6}
-    .fog-spiral-card.is-center{border-color:rgba(239,196,209,.52);box-shadow:0 42px 118px rgba(0,0,0,.64),0 0 44px rgba(217,160,179,.08),inset 0 1px 0 rgba(255,255,255,.28)}
-    .fog-spiral-image{position:absolute;inset:7px;overflow:hidden;border-radius:13px;background:#0b0b0e}
-    .fog-spiral-image img{display:block;width:100%;height:100%;object-fit:cover;opacity:.78;filter:grayscale(.38) contrast(1.08) brightness(.68);transition:transform .8s cubic-bezier(.2,.7,.2,1),filter .5s,opacity .4s}
-    .fog-spiral-card.is-center .fog-spiral-image img{opacity:.98;filter:grayscale(.12) contrast(1.08) brightness(.78)}
-    .fog-spiral-card:hover .fog-spiral-image img{transform:scale(1.06)}
-    .fog-spiral-image:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,3,6,.03) 30%,rgba(3,3,6,.9) 100%)}
-    .fog-spiral-number{position:absolute;z-index:7;top:15px;right:15px;padding:5px 7px;border:1px solid rgba(255,255,255,.16);border-radius:8px;background:rgba(0,0,0,.32);font:500 8px 'DM Mono';color:#fff;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-    .fog-spiral-card-copy{position:absolute;z-index:7;left:20px;right:20px;bottom:17px;display:flex;flex-direction:column;gap:4px;text-shadow:0 4px 18px #000}
-    .fog-spiral-card-copy strong{font-size:22px;font-weight:500;letter-spacing:-.06em;line-height:.95}
-    .fog-spiral-card-copy em{font:500 7px 'DM Mono';letter-spacing:.11em;color:rgba(255,255,255,.43);font-style:normal}
-    .fog-spiral-hud{position:absolute;z-index:9;right:4vw;bottom:42px;display:flex;align-items:center;gap:10px;padding:11px 13px;border:1px solid rgba(255,255,255,.1);border-radius:999px;background:rgba(255,255,255,.035);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);font:500 8px 'DM Mono';letter-spacing:.08em;color:#6d6e75}
-    .fog-spiral-hud b{color:#e7e7ea;font-weight:500}.fog-spiral-hud em{font-style:normal;color:#45464c}.fog-spiral-hud i{width:5px;height:5px;border-radius:50%;background:var(--pink,#d9a0b3);box-shadow:0 0 10px rgba(217,160,179,.8)}
-    .fog-spiral-fade{position:absolute;z-index:7;left:0;right:0;height:22%;pointer-events:none}.fog-spiral-fade.top{top:0;background:linear-gradient(to bottom,#07070a 2%,rgba(7,7,10,.74) 35%,transparent 100%)}.fog-spiral-fade.bottom{bottom:0;background:linear-gradient(to top,#07070a 2%,rgba(7,7,10,.74) 35%,transparent 100%)}
-    .fog-spiral-detail{position:absolute;z-index:30;inset:54px 7vw 54px 7vw;display:grid;grid-template-columns:minmax(260px,.82fr) minmax(360px,1.18fr);gap:28px;padding:16px;border:1px solid rgba(255,255,255,.16);border-radius:30px;background:linear-gradient(145deg,rgba(20,20,24,.82),rgba(8,8,11,.68));box-shadow:0 45px 150px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.1);backdrop-filter:blur(28px) saturate(125%);-webkit-backdrop-filter:blur(28px) saturate(125%);opacity:0;pointer-events:none;transform:translateY(26px) scale(.97);transition:opacity .4s,transform .55s cubic-bezier(.2,.72,.2,1)}
-    .fog-spiral-detail.open{opacity:1;pointer-events:auto;transform:none}
-    .fog-spiral-detail-media{position:relative;min-height:100%;overflow:hidden;border-radius:21px;background:#0b0b0e}.fog-spiral-detail-media img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(.28) contrast(1.08) brightness(.72)}.fog-spiral-detail-media:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 42%,rgba(3,3,5,.72) 100%)}
-    .fog-spiral-detail-body{display:flex;flex-direction:column;justify-content:space-between;padding:22px 24px 20px 8px;min-height:100%}.fog-spiral-detail-body h3{font-size:clamp(44px,6vw,92px);line-height:.82;letter-spacing:-.075em;font-weight:500;margin:24px 0}.fog-spiral-detail-body h3 i{font-family:'Playfair Display',Georgia,serif;font-weight:400}.fog-spiral-detail-body>p{max-width:610px;color:#9a9ba2;font-size:15px;line-height:1.75;margin:0}.fog-spiral-detail-list{display:grid;grid-template-columns:1fr;gap:8px;margin-top:28px}.fog-spiral-detail-list div{padding:13px 14px;border:1px solid rgba(255,255,255,.08);border-radius:13px;background:rgba(255,255,255,.025);font-size:12px;color:#cbccd0}.fog-spiral-detail-list div:before{content:'↗';display:inline-block;margin-right:9px;color:var(--pink-soft,#efc4d1)}.fog-spiral-detail-foot{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:30px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08);font:500 8px 'DM Mono';letter-spacing:.12em;color:#55565d}.fog-spiral-detail-close{appearance:none;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(255,255,255,.05);padding:10px 14px;color:#d4d5d9;font:500 8px 'DM Mono';letter-spacing:.1em;cursor:pointer;transition:.25s}.fog-spiral-detail-close:hover{background:rgba(217,160,179,.08);border-color:rgba(217,160,179,.3);color:#efc4d1}
-    .fog-spiral-wrap.detail-open .fog-spiral-card{opacity:.08!important;filter:blur(9px)!important;pointer-events:none}.fog-spiral-wrap.detail-open .fog-spiral-fade,.fog-spiral-wrap.detail-open .fog-spiral-hud{opacity:0;pointer-events:none}
-    @media(max-width:1100px){.fog-spiral-copy{left:5vw;width:285px}.fog-spiral-stage{left:69%;transform:translate(-50%,-50%) rotateX(-3deg) rotateY(-7deg) scale(.86)}.fog-spiral-detail{inset:48px 4vw}.fog-spiral-detail-body{padding-right:16px}}
-    @media(max-width:760px){.fog-spiral-wrap{min-height:1180px}.fog-spiral-copy{position:absolute;left:18px;right:18px;top:55px;width:auto}.fog-spiral-copy h2{font-size:56px;margin:22px 0 16px}.fog-spiral-copy p{max-width:450px;font-size:13px}.fog-spiral-copy .hint{margin-top:22px}.fog-spiral-stage{left:50%;top:62%;width:720px;height:720px;transform:translate(-50%,-50%) rotateX(-2deg) rotateY(-3deg) scale(.62)}.fog-spiral-ring{display:none}.fog-spiral-axis{top:32%;height:57%}.fog-spiral-hud{left:50%;right:auto;bottom:24px;transform:translateX(-50%);white-space:nowrap}.fog-spiral-detail{inset:18px;display:flex;flex-direction:column;gap:12px;padding:10px;border-radius:24px}.fog-spiral-detail-media{min-height:37%;max-height:38%}.fog-spiral-detail-body{padding:10px 12px 12px}.fog-spiral-detail-body h3{font-size:58px;margin:12px 0}.fog-spiral-detail-body>p{font-size:13px;line-height:1.6}.fog-spiral-detail-foot{margin-top:17px}.fog-spiral-detail-list{margin-top:17px}.fog-spiral-detail-list div{padding:10px 11px;font-size:11px}}
-    @media(prefers-reduced-motion:reduce){.fog-spiral-detail{transition:none}.fog-spiral-card{transition:none}}
-  `;
+  const esc = (value) => String(value).replace(/[&<>\"']/g, (char) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '\"':'&quot;', "'":'&#039;' }[char]));
 
   const style = document.createElement('style');
-  style.dataset.fogSpiral = 'true';
-  style.textContent = css;
+  style.textContent = `
+    .fog-carousel{position:relative;min-height:900px;padding:110px 0 135px;background:linear-gradient(180deg,#07070a 0%,#0a0a0d 52%,#07070a 100%);overflow:hidden;isolation:isolate;border-top:1px solid rgba(255,255,255,.045)}
+    .fog-carousel:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 56%,rgba(255,255,255,.075),transparent 24%),radial-gradient(circle at 18% 45%,rgba(217,160,179,.055),transparent 27%),radial-gradient(circle at 83% 60%,rgba(255,255,255,.035),transparent 23%);pointer-events:none}
+    .fog-carousel:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,5,7,.6),transparent 18%,transparent 80%,rgba(5,5,7,.72));pointer-events:none;z-index:20}
+    .fog-carousel-head{position:relative;z-index:25;display:grid;grid-template-columns:1.05fr .8fr;gap:7vw;padding:0 7vw}
+    .fog-carousel-kicker{font:500 9px 'DM Mono';letter-spacing:.13em;color:#676870}
+    .fog-carousel-title{margin:28px 0 24px;font-size:clamp(64px,8.5vw,132px);line-height:.84;letter-spacing:-.075em;font-weight:500;max-width:780px}
+    .fog-carousel-title i{font-family:'Playfair Display',Georgia,serif;font-weight:400}
+    .fog-carousel-intro{align-self:end;max-width:390px;padding-bottom:9px;color:#898a91;font-size:14px;line-height:1.75}
+    .fog-carousel-stage{position:relative;z-index:10;height:590px;margin-top:76px;overflow:hidden;touch-action:pan-y;cursor:grab;user-select:none}
+    .fog-carousel-stage.is-dragging{cursor:grabbing}
+    .fog-carousel-glow{position:absolute;left:50%;top:50%;width:650px;height:400px;transform:translate(-50%,-42%);background:radial-gradient(ellipse,rgba(217,160,179,.09),rgba(255,255,255,.035) 32%,transparent 70%);filter:blur(35px);pointer-events:none}
+    .fog-carousel-track{position:absolute;inset:0;transform-style:preserve-3d;perspective:1700px}
+    .fog-carousel-card{--x:0px;--y:0px;--s:1;--r:0deg;--ry:0deg;--a:1;--blur:0px;position:absolute;left:50%;top:50%;width:320px;height:445px;margin:-222.5px 0 0 -160px;padding:7px;border:1px solid rgba(255,255,255,.14);border-radius:25px;background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.02));box-shadow:0 40px 110px rgba(0,0,0,.55),inset 0 1px rgba(255,255,255,.17);backdrop-filter:blur(18px) saturate(135%);-webkit-backdrop-filter:blur(18px) saturate(135%);transform:translate3d(var(--x),var(--y),0) rotateZ(var(--r)) rotateY(var(--ry)) scale(var(--s));opacity:var(--a);filter:blur(var(--blur));will-change:transform,opacity,filter;transition:border-color .3s,box-shadow .35s;cursor:pointer;outline:none}
+    .fog-carousel-card:before{content:"";position:absolute;inset:0;border-radius:25px;background:linear-gradient(140deg,rgba(255,255,255,.12),transparent 24%,transparent 68%,rgba(217,160,179,.06));pointer-events:none;z-index:4}
+    .fog-carousel-card:after{content:"";position:absolute;inset:-1px;border-radius:26px;padding:1px;background:linear-gradient(125deg,rgba(255,255,255,.55),transparent 26%,transparent 66%,rgba(217,160,179,.18));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:8}
+    .fog-carousel-card.is-center{border-color:rgba(239,196,209,.45);box-shadow:0 50px 130px rgba(0,0,0,.68),0 0 45px rgba(217,160,179,.08),inset 0 1px rgba(255,255,255,.25)}
+    .fog-carousel-card-media{position:absolute;inset:7px;overflow:hidden;border-radius:18px;background:#0a0a0d}
+    .fog-carousel-card-media img{display:block;width:100%;height:100%;object-fit:cover;opacity:.72;filter:grayscale(.62) contrast(1.12) brightness(.6) saturate(.55);transform:scale(1.04);transition:transform .9s cubic-bezier(.2,.72,.2,1),filter .6s,opacity .5s}
+    .fog-carousel-card.is-center .fog-carousel-card-media img{opacity:.96;filter:grayscale(.18) contrast(1.1) brightness(.74) saturate(.68);transform:scale(1.02)}
+    .fog-carousel-card:hover .fog-carousel-card-media img{transform:scale(1.075)}
+    .fog-carousel-card-media:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,2,4,.02) 26%,rgba(2,2,4,.18) 48%,rgba(2,2,4,.94) 100%)}
+    .fog-carousel-card-number{position:absolute;z-index:9;top:19px;right:19px;padding:6px 8px;border:1px solid rgba(255,255,255,.16);border-radius:8px;background:rgba(0,0,0,.3);font:500 8px 'DM Mono';color:#fff;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+    .fog-carousel-card-copy{position:absolute;z-index:9;left:22px;right:22px;bottom:22px;display:flex;flex-direction:column;gap:7px;text-shadow:0 5px 25px #000}
+    .fog-carousel-card-copy small{font:500 8px 'DM Mono';letter-spacing:.13em;color:rgba(255,255,255,.45)}
+    .fog-carousel-card-copy strong{font-size:27px;line-height:.92;letter-spacing:-.06em;font-weight:500}
+    .fog-carousel-card-copy em{font:500 7px 'DM Mono';letter-spacing:.1em;color:rgba(255,255,255,.4);font-style:normal}
+    .fog-carousel-side{position:absolute;z-index:24;left:7vw;bottom:49px;display:flex;align-items:center;gap:10px;font:500 8px 'DM Mono';letter-spacing:.09em;color:#616269}
+    .fog-carousel-side i{width:5px;height:5px;border-radius:50%;background:var(--pink,#d9a0b3);box-shadow:0 0 12px rgba(217,160,179,.75)}
+    .fog-carousel-hud{position:absolute;z-index:24;right:7vw;bottom:40px;display:flex;align-items:center;gap:11px;padding:11px 14px;border:1px solid rgba(255,255,255,.1);border-radius:999px;background:rgba(255,255,255,.035);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);font:500 8px 'DM Mono';letter-spacing:.08em;color:#66676e}
+    .fog-carousel-hud b{color:#ececef;font-weight:500}.fog-carousel-hud em{font-style:normal;color:#44454a}
+    .fog-carousel-open{position:absolute;z-index:50;inset:42px 7vw 42px;display:grid;grid-template-columns:minmax(300px,.88fr) minmax(340px,1.12fr);gap:22px;padding:15px;border:1px solid rgba(255,255,255,.16);border-radius:30px;background:linear-gradient(145deg,rgba(19,19,23,.86),rgba(7,7,10,.75));box-shadow:0 55px 170px rgba(0,0,0,.78),inset 0 1px rgba(255,255,255,.1);backdrop-filter:blur(30px) saturate(125%);-webkit-backdrop-filter:blur(30px) saturate(125%);opacity:0;pointer-events:none;transform:translateY(24px) scale(.965);transition:opacity .38s,transform .55s cubic-bezier(.2,.72,.2,1)}
+    .fog-carousel-open.is-open{opacity:1;pointer-events:auto;transform:none}
+    .fog-carousel-open-media{position:relative;overflow:hidden;border-radius:22px;background:#0a0a0d;min-height:100%}
+    .fog-carousel-open-media img{width:100%;height:100%;display:block;object-fit:cover;filter:grayscale(.25) contrast(1.1) brightness(.69)}
+    .fog-carousel-open-media:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 42%,rgba(3,3,5,.78) 100%)}
+    .fog-carousel-open-body{display:flex;flex-direction:column;justify-content:space-between;min-height:100%;padding:26px 28px 20px 8px}
+    .fog-carousel-open-body>span{font:500 8px 'DM Mono';letter-spacing:.13em;color:#696a72}
+    .fog-carousel-open-body h3{margin:23px 0 12px;font-size:clamp(48px,6.2vw,90px);line-height:.82;letter-spacing:-.075em;font-weight:500}
+    .fog-carousel-open-body h3 i{font-family:'Playfair Display',Georgia,serif;font-weight:400}
+    .fog-carousel-open-body .lead{max-width:600px;color:#c5c6cb;font-size:15px;line-height:1.75;margin:0}
+    .fog-carousel-open-body .accent{margin-top:12px;color:var(--pink-soft,#efc4d1);font-size:13px}
+    .fog-carousel-open-list{display:grid;gap:8px;margin-top:26px}
+    .fog-carousel-open-list div{padding:13px 14px;border:1px solid rgba(255,255,255,.08);border-radius:13px;background:rgba(255,255,255,.025);font-size:12px;color:#c8c9cd}
+    .fog-carousel-open-list div:before{content:'↗';margin-right:10px;color:var(--pink-soft,#efc4d1)}
+    .fog-carousel-open-foot{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:25px;padding-top:15px;border-top:1px solid rgba(255,255,255,.08);font:500 8px 'DM Mono';letter-spacing:.11em;color:#55565d}
+    .fog-carousel-close{border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.04);border-radius:999px;padding:10px 13px;color:#bbbcc2;font:500 8px 'DM Mono';letter-spacing:.08em;cursor:pointer;transition:.25s}.fog-carousel-close:hover{border-color:rgba(239,196,209,.34);color:#fff;background:rgba(217,160,179,.08)}
+    @media(max-width:1000px){.fog-carousel{min-height:840px}.fog-carousel-head{grid-template-columns:1fr;padding:0 6vw}.fog-carousel-intro{max-width:520px}.fog-carousel-stage{height:540px;margin-top:50px}.fog-carousel-card{width:290px;height:405px;margin:-202.5px 0 0 -145px}.fog-carousel-open{inset:35px 5vw 35px;grid-template-columns:1fr}.fog-carousel-open-media{min-height:270px}.fog-carousel-open-body{padding:24px}.fog-carousel-open-body h3{font-size:54px}.fog-carousel-side{left:6vw}.fog-carousel-hud{right:6vw}}
+    @media(max-width:650px){.fog-carousel{min-height:760px;padding:78px 0 105px}.fog-carousel-head{padding:0 18px}.fog-carousel-title{font-size:clamp(56px,15vw,86px);margin:23px 0 20px}.fog-carousel-intro{font-size:13px}.fog-carousel-stage{height:500px;margin-top:34px}.fog-carousel-card{width:245px;height:345px;margin:-172.5px 0 0 -122.5px}.fog-carousel-card-copy{left:18px;right:18px;bottom:18px}.fog-carousel-card-copy strong{font-size:23px}.fog-carousel-side{left:18px;bottom:26px}.fog-carousel-hud{right:18px;bottom:24px;padding:10px 11px}.fog-carousel-open{inset:20px 18px 24px;padding:9px;grid-template-rows:40% 60%;grid-template-columns:1fr;border-radius:22px}.fog-carousel-open-media{min-height:0;border-radius:16px}.fog-carousel-open-body{padding:16px 13px 11px}.fog-carousel-open-body h3{font-size:42px;margin:14px 0 9px}.fog-carousel-open-body .lead{font-size:12px;line-height:1.55}.fog-carousel-open-body .accent{font-size:11px;margin-top:7px}.fog-carousel-open-list{display:none}.fog-carousel-open-foot{margin-top:12px;padding-top:10px}.fog-carousel-card-number{top:13px;right:13px}}
+    @media(prefers-reduced-motion:reduce){.fog-carousel-card,.fog-carousel-open{transition:none}.fog-carousel-card-media img{transition:none}}
+  `;
   document.head.appendChild(style);
 
-  let phaseTarget = 0;
-  let phaseCurrent = 0;
-  let raf = 0;
-  let pointer = { active: false, axis: null, lastX: 0, lastY: 0 };
-  let selected = 0;
-
-  const wrap = (value, total) => ((value + total / 2) % total + total) % total - total / 2;
-
-  function build() {
-    const bridge = document.querySelector('.home-bridge');
-    if (!bridge || document.querySelector('.fog-spiral-wrap')) return;
-
-    const section = document.createElement('section');
-    section.className = 'fog-spiral-wrap';
-    section.setAttribute('aria-label', 'Selected work and profile index');
-    section.innerHTML = `
-      <div class="fog-spiral-copy">
-        <span>03 / ORBIT INDEX</span>
-        <h2>Choose a<br/><i>direction.</i></h2>
-        <p>Scroll inside the gallery to move through the cards. Bring one to the center, then open it.</p>
-        <div class="hint"><i></i> WHEEL / DRAG TO ROTATE</div>
+  const section = document.createElement('section');
+  section.className = 'fog-carousel';
+  section.setAttribute('aria-label', 'Interactive portfolio index');
+  section.innerHTML = `
+    <div class="fog-carousel-head">
+      <div>
+        <span class="fog-carousel-kicker">01 / VISUAL INDEX</span>
+        <h2 class="fog-carousel-title">Choose a <i>direction.</i></h2>
       </div>
-      <div class="fog-spiral-scene">
-        <div class="fog-spiral-stage">
-          <div class="fog-spiral-axis"></div>
-          <div class="fog-spiral-ring"></div>
-          <div class="fog-spiral-track"></div>
+      <p class="fog-carousel-intro">Scroll inside the gallery to move through the images. Bring one to the center, then open it. A visual index for the work, tools, learning and ideas behind this site.</p>
+    </div>
+    <div class="fog-carousel-stage" aria-label="Image carousel">
+      <div class="fog-carousel-glow"></div>
+      <div class="fog-carousel-track"></div>
+      <div class="fog-carousel-side"><i></i><span>DRAG · WHEEL · CLICK</span></div>
+      <div class="fog-carousel-hud"><b>01</b><em>/</em><span>07</span></div>
+    </div>
+    <div class="fog-carousel-open" aria-hidden="true">
+      <div class="fog-carousel-open-media"><img alt="" src="" /></div>
+      <div class="fog-carousel-open-body">
+        <div>
+          <span></span>
+          <h3></h3>
+          <p class="lead"></p>
+          <p class="accent"></p>
+          <div class="fog-carousel-open-list"></div>
         </div>
-        <div class="fog-spiral-fade top"></div>
-        <div class="fog-spiral-fade bottom"></div>
+        <div class="fog-carousel-open-foot"><span></span><button class="fog-carousel-close" type="button">CLOSE ×</button></div>
       </div>
-      <div class="fog-spiral-hud"><i></i><b class="fog-spiral-current">01 / 06</b><em>SCROLL TO MOVE</em></div>
-      <div class="fog-spiral-detail" role="dialog" aria-modal="false" aria-hidden="true"></div>
-    `;
+    </div>
+    <div class="fog-carousel-fade top"></div>
+    <div class="fog-carousel-fade bottom"></div>
+  `;
 
-    bridge.insertAdjacentElement('afterend', section);
-    const track = section.querySelector('.fog-spiral-track');
-    const scene = section.querySelector('.fog-spiral-scene');
-    const current = section.querySelector('.fog-spiral-current');
-    const detail = section.querySelector('.fog-spiral-detail');
-    const cards = [];
+  const mount = () => {
+    const home = document.querySelector('.home-page');
+    if (!home || document.querySelector('.fog-carousel')) return false;
+    const bridge = home.querySelector('.home-bridge');
+    if (bridge) home.insertBefore(section, bridge);
+    else home.appendChild(section);
+    return true;
+  };
 
-    CARDS.forEach((card, index) => {
+  const boot = () => {
+    if (!mount()) {
+      requestAnimationFrame(boot);
+      return;
+    }
+
+    const stage = section.querySelector('.fog-carousel-stage');
+    const track = section.querySelector('.fog-carousel-track');
+    const open = section.querySelector('.fog-carousel-open');
+    const openImg = open.querySelector('img');
+    const openKicker = open.querySelector('span');
+    const openTitle = open.querySelector('h3');
+    const openLead = open.querySelector('.lead');
+    const openAccent = open.querySelector('.accent');
+    const openList = open.querySelector('.fog-carousel-open-list');
+    const openMeta = open.querySelector('.fog-carousel-open-foot span');
+    const close = open.querySelector('.fog-carousel-close');
+    const hud = section.querySelector('.fog-carousel-hud');
+    let phase = 0;
+    let target = 0;
+    let raf = 0;
+    let active = 0;
+    let pointer = null;
+
+    const wrap = (v, total) => ((v + total / 2) % total + total) % total - total / 2;
+    const cards = CARDS.map((item, index) => {
       const el = document.createElement('button');
       el.type = 'button';
-      el.className = 'fog-spiral-card';
-      el.setAttribute('aria-label', `Open ${card.title}`);
+      el.className = 'fog-carousel-card';
+      el.setAttribute('aria-label', `Open ${item.title}`);
       el.innerHTML = `
-        <div class="fog-spiral-image"><img src="${card.image}" alt="${esc(card.title)}" draggable="false" /></div>
-        <span class="fog-spiral-number">${esc(card.number)}</span>
-        <div class="fog-spiral-card-copy"><small>${esc(card.eyebrow)}</small><strong>${esc(card.title)}</strong><em>${esc(card.tag)}</em></div>
+        <span class="fog-carousel-number">${esc(item.n)}</span>
+        <div class="fog-carousel-card-media"><img src="${esc(item.image)}" alt="" style="object-position:${esc(item.position)}" /></div>
+        <div class="fog-carousel-card-copy"><small>${esc(item.label)}</small><strong>${esc(item.title)}</strong><em>${esc(item.tag)}</em></div>
       `;
-      track.appendChild(el);
-      cards.push(el);
       el.addEventListener('click', () => {
-        const slot = wrap(index - phaseCurrent, CARDS.length);
-        if (Math.abs(slot) > 0.35) {
-          phaseTarget += index - Math.round(phaseCurrent);
+        const slot = wrap(index - phase, CARDS.length);
+        if (Math.abs(slot) > 0.45) {
+          target += slot;
           schedule();
           return;
         }
-        openDetail(index);
+        active = index;
+        openCard(item);
       });
+      track.appendChild(el);
+      return el;
     });
 
     function render() {
       const total = CARDS.length;
-      const phase = phaseCurrent;
-      let nearest = 0;
-      let nearestAbs = Infinity;
-
+      phase += (target - phase) * 0.105;
+      if (Math.abs(target - phase) < 0.00025) phase = target;
+      let centerIndex = Math.round((((phase % total) + total) % total));
+      if (centerIndex < 0) centerIndex += total;
+      active = centerIndex;
       cards.forEach((card, index) => {
         const slot = wrap(index - phase, total);
         const abs = Math.abs(slot);
-        if (abs < nearestAbs) { nearestAbs = abs; nearest = index; }
-
-        const angle = -16 + slot * 38;
-        const lift = slot * 88;
-        const radius = 308 + Math.cos(slot * 0.92) * 26;
-        const scale = 1 - Math.min(abs * 0.038, 0.24);
-        const opacity = Math.max(0, 1 - Math.max(0, abs - 2.05) * 0.34);
-        const blur = Math.max(0, abs - 2.25) * 2.8;
-        const tilt = slot * -1.35;
-
-        card.style.setProperty('--angle', `${angle}deg`);
-        card.style.setProperty('--lift', `${lift}px`);
-        card.style.setProperty('--radius', `${radius}px`);
-        card.style.setProperty('--scale', `${scale}`);
-        card.style.setProperty('--alpha', `${opacity}`);
+        const x = slot * 292 + (slot * Math.abs(slot) * 27);
+        const y = Math.abs(slot) * Math.abs(slot) * 18;
+        const scale = abs < 0.5 ? 1.08 : Math.max(.7, 1 - abs * .085);
+        const rotate = slot * -3.5;
+        const rotateY = slot * -9;
+        const opacity = Math.max(0.08, 1 - Math.max(0, abs - 2.2) * .42);
+        const blur = Math.max(0, abs - 2.5) * 2.3;
+        card.style.setProperty('--x', `${x}px`);
+        card.style.setProperty('--y', `${y}px`);
+        card.style.setProperty('--s', scale);
+        card.style.setProperty('--r', `${rotate}deg`);
+        card.style.setProperty('--ry', `${rotateY}deg`);
+        card.style.setProperty('--a', opacity);
         card.style.setProperty('--blur', `${blur}px`);
-        card.style.setProperty('--tilt', `${tilt}deg`);
-        card.classList.toggle('is-center', abs < 0.42);
+        card.style.zIndex = String(100 - Math.round(abs * 10));
+        card.classList.toggle('is-center', abs < .5);
+        card.tabIndex = abs < .5 ? 0 : -1;
       });
-
-      selected = nearest;
-      current.textContent = `${String(nearest + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
-    }
-
-    function animate() {
-      raf = 0;
-      const delta = phaseTarget - phaseCurrent;
-      phaseCurrent += delta * 0.115;
-      render();
-      if (Math.abs(delta) > 0.00035) raf = requestAnimationFrame(animate);
-      else phaseCurrent = phaseTarget;
+      hud.querySelector('b').textContent = String((centerIndex + 1)).padStart(2, '0');
+      if (Math.abs(target - phase) > 0.00025) raf = requestAnimationFrame(render); else raf = 0;
     }
 
     function schedule() {
-      if (!raf) raf = requestAnimationFrame(animate);
+      if (!raf) raf = requestAnimationFrame(render);
     }
 
-    function addPhase(amount) {
-      phaseTarget += amount;
+    function rotate(amount) {
+      target += amount;
       schedule();
     }
 
-    function openDetail(index) {
-      const card = CARDS[index];
-      detail.innerHTML = `
-        <div class="fog-spiral-detail-media"><img src="${card.image}" alt="${esc(card.title)}" /></div>
-        <div class="fog-spiral-detail-body">
-          <div>
-            <span>${esc(card.number)} / ${esc(card.eyebrow)}</span>
-            <h3>${esc(card.title.split(' ')[0])}${card.title.includes(' ') ? `<br/><i>${esc(card.title.split(' ').slice(1).join(' '))}</i>` : ''}</h3>
-            <p>${esc(card.intro)}</p>
-            <div class="fog-spiral-detail-list">
-              ${card.details.map((item) => `<div>${esc(item)}</div>`).join('')}
-            </div>
-          </div>
-          <div class="fog-spiral-detail-foot"><span>${esc(card.meta)}</span><button class="fog-spiral-detail-close" type="button">CLOSE ×</button></div>
-        </div>
-      `;
-      section.classList.add('detail-open');
-      detail.classList.add('open');
-      detail.setAttribute('aria-hidden', 'false');
-      detail.querySelector('.fog-spiral-detail-close')?.addEventListener('click', closeDetail);
+    function openCard(item) {
+      openImg.src = item.image;
+      openImg.alt = item.title;
+      openKicker.textContent = `${item.n} / ${item.label}`;
+      openTitle.textContent = item.title;
+      openLead.textContent = item.text;
+      openAccent.textContent = item.accent;
+      openList.innerHTML = item.items.map((value) => `<div>${esc(value)}</div>`).join('');
+      openMeta.textContent = item.meta;
+      open.classList.add('is-open');
+      open.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
     }
 
-    function closeDetail() {
-      section.classList.remove('detail-open');
-      detail.classList.remove('open');
-      detail.setAttribute('aria-hidden', 'true');
+    function closeCard() {
+      open.classList.remove('is-open');
+      open.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
     }
 
-    const onWheel = (event) => {
-      if (detail.classList.contains('open')) return;
+    stage.addEventListener('wheel', (event) => {
+      if (open.classList.contains('is-open')) return;
       event.preventDefault();
-      addPhase(event.deltaY * 0.012);
-    };
+      rotate(event.deltaY > 0 ? 0.45 : -0.45);
+    }, { passive: false });
 
-    const onPointerDown = (event) => {
-      if (detail.classList.contains('open')) return;
+    stage.addEventListener('pointerdown', (event) => {
       if (event.pointerType === 'mouse' && event.button !== 0) return;
-      pointer.active = true;
-      pointer.axis = null;
-      pointer.lastX = event.clientX;
-      pointer.lastY = event.clientY;
-      if (event.pointerType !== 'touch') {
-        event.preventDefault();
-        scene.setPointerCapture?.(event.pointerId);
-      }
-    };
+      pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, lastX: event.clientX, lastY: event.clientY, moved: false };
+      stage.classList.add('is-dragging');
+      stage.setPointerCapture?.(event.pointerId);
+    });
 
-    const onPointerMove = (event) => {
-      if (!pointer.active || detail.classList.contains('open')) return;
+    stage.addEventListener('pointermove', (event) => {
+      if (!pointer || pointer.id !== event.pointerId || open.classList.contains('is-open')) return;
       const dx = event.clientX - pointer.lastX;
       const dy = event.clientY - pointer.lastY;
-      if (!pointer.axis) {
-        if (Math.hypot(dx, dy) < 8) return;
-        pointer.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
-        if (event.pointerType === 'touch' && pointer.axis === 'y') {
-          pointer.active = false;
-          scene.style.touchAction = 'pan-y';
-          return;
-        }
-        if (event.pointerType === 'touch') {
-          scene.style.touchAction = 'none';
-          scene.setPointerCapture?.(event.pointerId);
-        }
-      }
-      if (event.pointerType === 'touch' && pointer.axis !== 'x') return;
-      event.preventDefault();
-      addPhase(event.pointerType === 'touch' ? -dx * 0.018 : -dy * 0.018);
+      if (Math.abs(dx) + Math.abs(dy) > 3) pointer.moved = true;
+      if (Math.abs(dx) > Math.abs(dy) * .35) rotate(-dx * .0125);
       pointer.lastX = event.clientX;
       pointer.lastY = event.clientY;
+    });
+
+    const release = (event) => {
+      if (!pointer || pointer.id !== event.pointerId) return;
+      stage.classList.remove('is-dragging');
+      stage.releasePointerCapture?.(event.pointerId);
+      pointer = null;
     };
 
-    const stopPointer = (event) => {
-      pointer.active = false;
-      pointer.axis = null;
-      scene.style.touchAction = 'pan-y';
-      if (scene.hasPointerCapture?.(event.pointerId)) scene.releasePointerCapture(event.pointerId);
-    };
+    stage.addEventListener('pointerup', release);
+    stage.addEventListener('pointercancel', release);
+    close.addEventListener('click', closeCard);
+    open.addEventListener('click', (event) => { if (event.target === open) closeCard(); });
+    window.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeCard(); });
 
-    scene.addEventListener('wheel', onWheel, { passive: false });
-    scene.addEventListener('pointerdown', onPointerDown);
-    scene.addEventListener('pointermove', onPointerMove, { passive: false });
-    scene.addEventListener('pointerup', stopPointer);
-    scene.addEventListener('pointercancel', stopPointer);
-    scene.style.touchAction = 'pan-y';
-    document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeDetail(); });
     render();
-    schedule();
-  }
+  };
 
-  const observer = new MutationObserver(() => build());
-  observer.observe(document.body, { childList: true, subtree: true });
-  const boot = () => { build(); if (!document.querySelector('.fog-spiral-wrap')) window.setTimeout(boot, 150); };
-  boot();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
+  else boot();
 })();
