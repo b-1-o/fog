@@ -4,6 +4,7 @@ import './styles.css';
 
 const FIVERR_URL = 'https://www.fiverr.com/s/432lpeR';
 const BONSai_IMAGE = './assets/bonsi.jpeg';
+const SAKURA_IMAGE = './assets/ssakura.jpg';
 
 const services = [
   ['01', 'CUSTOM WEBSITES', 'Distinct digital spaces shaped around the business, its audience and the feeling it should leave behind.'],
@@ -21,7 +22,7 @@ const process = [
   ['04', 'REFINE', 'Remove friction, sharpen the final pass and leave only what earns its place.'],
 ];
 
-const toolkit = ['HTML', 'CSS', 'JavaScript', 'TypeScript', 'React', 'Next.js', 'Three.js', 'Framer Motion', 'Vite', 'Git', 'Linux', 'UI Design'];
+const toolkit = ['HTML', 'CSS', 'JavaScript', 'TypeScript', 'React', 'Next.js', 'Framer Motion', 'Vite', 'Git', 'Linux', 'UI Design'];
 
 function useSmoothScrollProgress(sectionRef) {
   const [progress, setProgress] = useState(0);
@@ -54,6 +55,105 @@ function useSmoothScrollProgress(sectionRef) {
   return progress;
 }
 
+function Snowfall() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return undefined;
+    const context = canvas.getContext('2d', { alpha: true });
+    if (!context) return undefined;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const particles = [];
+    let width = 0;
+    let height = 0;
+    let ratio = 1;
+    let frame = 0;
+    let last = performance.now();
+    let elapsed = 0;
+
+    const makeParticle = (initial = false) => ({
+      x: Math.random() * width,
+      y: initial ? Math.random() * height : -14 - Math.random() * 80,
+      size: 0.7 + Math.random() * 2.5,
+      speed: 11 + Math.random() * 26,
+      drift: 4 + Math.random() * 12,
+      depth: 0.35 + Math.random() * 1.05,
+      opacity: 0.16 + Math.random() * 0.55,
+      phase: Math.random() * Math.PI * 2,
+      rotation: Math.random() * Math.PI,
+    });
+
+    const resize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      ratio = Math.min(window.devicePixelRatio || 1, 1.35);
+      canvas.width = Math.round(width * ratio);
+      canvas.height = Math.round(height * ratio);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+      const density = width < 700 ? 62 : width < 1200 ? 92 : 118;
+      particles.length = 0;
+      for (let i = 0; i < density; i += 1) particles.push(makeParticle(true));
+    };
+
+    const draw = (now) => {
+      const delta = Math.min(0.035, (now - last) / 1000);
+      last = now;
+      elapsed += delta;
+      context.clearRect(0, 0, width, height);
+
+      particles.forEach((particle) => {
+        const depth = particle.depth;
+        if (!reduceMotion) {
+          particle.y += particle.speed * depth * delta;
+          particle.x += (Math.sin(elapsed * 0.55 + particle.phase) * particle.drift + 2.5) * depth * delta;
+        }
+
+        if (particle.y > height + 16 || particle.x > width + 18) {
+          Object.assign(particle, makeParticle(false), { x: Math.random() * width });
+        }
+        if (particle.x < -18) particle.x = width + 16;
+
+        const size = particle.size * depth;
+        context.save();
+        context.translate(particle.x, particle.y);
+        context.globalAlpha = particle.opacity * (0.62 + depth * 0.26);
+        context.fillStyle = '#ffffff';
+        context.shadowColor = 'rgba(255,255,255,.38)';
+        context.shadowBlur = depth > 0.82 ? 5 : 2;
+
+        if (size < 1.65) {
+          context.beginPath();
+          context.arc(0, 0, size, 0, Math.PI * 2);
+          context.fill();
+        } else {
+          context.rotate(particle.rotation + Math.sin(elapsed + particle.phase) * 0.15);
+          context.fillRect(-size * 0.5, -size * 0.14, size, size * 0.28);
+          context.fillRect(-size * 0.14, -size * 0.5, size * 0.28, size);
+        }
+        context.restore();
+      });
+
+      frame = requestAnimationFrame(draw);
+    };
+
+    resize();
+    window.addEventListener('resize', resize, { passive: true });
+    frame = requestAnimationFrame(draw);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="snow-canvas" aria-hidden="true" />;
+}
+
 function BonsaiHero() {
   const sectionRef = useRef(null);
   const progress = useSmoothScrollProgress(sectionRef);
@@ -81,17 +181,24 @@ function BonsaiHero() {
   }, []);
 
   const style = useMemo(() => ({
-    '--mouse-x': `${mouse.x * -18}px`,
-    '--mouse-y': `${mouse.y * -12}px`,
-    '--image-scale': String(1.02 + progress * 0.12),
+    '--mouse-x': `${mouse.x * -24}px`,
+    '--mouse-y': `${mouse.y * -16}px`,
+    '--mouse-x-back': `${mouse.x * -42}px`,
+    '--mouse-y-back': `${mouse.y * -28}px`,
+    '--image-scale': String(1.018 + progress * 0.1),
+    '--depth-shift': `${progress * -14}px`,
   }), [progress, mouse]);
 
   return (
     <section ref={sectionRef} className="hero-stage" id="home">
       <div className="hero-sticky">
+        <div className="hero-depth-back" style={style} aria-hidden="true">
+          <img src={BONSai_IMAGE} alt="" />
+        </div>
         <div className="hero-photo" style={style} aria-hidden="true">
           <img src={BONSai_IMAGE} alt="" />
         </div>
+        <div className="hero-depth-fog" aria-hidden="true" />
         <div className="hero-photo-glass" aria-hidden="true" />
         <div className="hero-vignette" aria-hidden="true" />
         <div className="hero-grain" aria-hidden="true" />
@@ -142,6 +249,7 @@ function SectionHead({ number, title, aside }) {
 function App() {
   return (
     <div className="site">
+      <Snowfall />
       <BonsaiHero />
 
       <main>
@@ -163,8 +271,10 @@ function App() {
         </section>
 
         <section className="statement-band">
-          <div className="statement-image" style={{ backgroundImage: `url(${BONSai_IMAGE})` }} />
-          <div className="statement-overlay" />
+          <div className="statement-image-back" style={{ backgroundImage: `url(${SAKURA_IMAGE})` }} aria-hidden="true" />
+          <div className="statement-image" style={{ backgroundImage: `url(${SAKURA_IMAGE})` }} aria-hidden="true" />
+          <div className="statement-glass" aria-hidden="true" />
+          <div className="statement-overlay" aria-hidden="true" />
           <p>GOOD DESIGN DOESN'T<br /><em>SHOUT.</em></p>
           <span>02 / PRINCIPLE</span>
         </section>
@@ -207,8 +317,9 @@ function App() {
         </section>
 
         <section className="contact-section" id="contact">
-          <div className="contact-photo" style={{ backgroundImage: `url(${BONSai_IMAGE})` }} />
-          <div className="contact-overlay" />
+          <div className="contact-depth-back" style={{ backgroundImage: `url(${BONSai_IMAGE})` }} aria-hidden="true" />
+          <div className="contact-photo" style={{ backgroundImage: `url(${BONSai_IMAGE})` }} aria-hidden="true" />
+          <div className="contact-overlay" aria-hidden="true" />
           <SectionHead number="06" title="CONTACT" aside="LET'S BUILD SOMETHING QUIETLY DISTINCT" />
           <div className="contact-content">
             <p className="contact-kicker">HAVE SOMETHING WORTH BUILDING?</p>
