@@ -5,12 +5,6 @@ import './styles.css';
 const FIVERR_URL = 'https://www.fiverr.com/s/432lpeR';
 const BONSai_IMAGE = './assets/bonsi.jpeg';
 
-const projects = [
-  { n: '01', name: 'ROYAL TOUCH', type: 'Mobile car wash website', tags: 'Brand · UI · Conversion', tone: 'silver' },
-  { n: '02', name: 'B1O', type: 'Experimental digital interface', tags: 'Product · Motion · Software', tone: 'pink' },
-  { n: '03', name: 'FOG', type: 'Immersive portfolio study', tags: 'Atmosphere · Interaction · Visuals', tone: 'dark' },
-];
-
 const services = [
   ['01', 'CUSTOM WEBSITES', 'Distinct digital spaces shaped around the business, its audience and the feeling it should leave behind.'],
   ['02', 'LANDING PAGES', 'High-clarity pages that make the important thing obvious without turning the experience into a template.'],
@@ -106,7 +100,6 @@ function BonsaiHero() {
           <a className="brand" href="#home">B1O <span>/ WEB</span></a>
           <nav>
             <a href="#about">ABOUT</a>
-            <a href="#work">WORK</a>
             <a href="#services">SERVICES</a>
             <a href="#contact">CONTACT</a>
           </nav>
@@ -150,6 +143,7 @@ function App() {
   return (
     <div className="site">
       <BonsaiHero />
+
       <main>
         <section className="content-section about-section" id="about">
           <SectionHead number="01" title="ABOUT" aside="SHAPED WITH RESTRAINT" />
@@ -173,25 +167,6 @@ function App() {
           <div className="statement-overlay" />
           <p>GOOD DESIGN DOESN'T<br /><em>SHOUT.</em></p>
           <span>02 / PRINCIPLE</span>
-        </section>
-
-        <section className="content-section work-section" id="work">
-          <SectionHead number="02" title="SELECTED WORK" aside="A FEW BUILDS" />
-          <div className="work-grid">
-            {projects.map((project, index) => (
-              <article className={`work-card work-card-${project.tone} ${index === 0 ? 'work-card-large' : ''}`} key={project.name}>
-                <div className="work-card-visual">
-                  {project.name === 'FOG' ? <img src={BONSai_IMAGE} alt="" /> : <div className="visual-word">{project.name}</div>}
-                  <span className="work-index">{project.n}</span>
-                  <span className="work-arrow">↗</span>
-                </div>
-                <div className="work-info">
-                  <div><h3>{project.name}</h3><p>{project.type}</p></div>
-                  <span>{project.tags}</span>
-                </div>
-              </article>
-            ))}
-          </div>
         </section>
 
         <section className="content-section services-section" id="services">
@@ -245,6 +220,7 @@ function App() {
           </div>
         </section>
       </main>
+
       <footer>
         <span>B1O / WEB</span>
         <span>DESIGN · BUILD · REFINE</span>
