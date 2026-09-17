@@ -16,6 +16,12 @@
     let internalSync = false;
 
     const getCards = () => Array.from(gallery.querySelectorAll('.sakura-card'));
+    const setAttr = (node, name, value) => {
+      if (node.getAttribute(name) !== value) node.setAttribute(name, value);
+    };
+    const setText = (node, value) => {
+      if (node.textContent !== value) node.textContent = value;
+    };
 
     const centerCard = (index, behavior = 'smooth') => {
       const card = getCards()[index];
@@ -31,7 +37,7 @@
     const setCoverHint = (card, index) => {
       const hint = card.querySelector('.sakura-card-cover em');
       if (!hint) return;
-      hint.textContent = open === index ? 'OPEN' : active === index ? 'CLICK TO REVEAL' : 'BRING TO CENTER';
+      setText(hint, open === index ? 'OPEN' : active === index ? 'CLICK TO REVEAL' : 'BRING TO CENTER');
     };
 
     const sync = () => {
@@ -42,19 +48,26 @@
         const cards = getCards();
         if (!cards.length) return;
         internalSync = true;
-        gallery.classList.toggle('has-open', open !== null);
+        const hasOpen = open !== null;
+        if (gallery.classList.contains('has-open') !== hasOpen) gallery.classList.toggle('has-open', hasOpen);
+
         cards.forEach((card, index) => {
           const isActive = index === active;
           const isOpen = index === open;
-          card.classList.toggle('is-active', isActive);
-          card.classList.toggle('is-open', isOpen);
-          card.setAttribute('tabindex', isActive ? '0' : '-1');
-          card.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          if (card.classList.contains('is-active') !== isActive) card.classList.toggle('is-active', isActive);
+          if (card.classList.contains('is-open') !== isOpen) card.classList.toggle('is-open', isOpen);
+          setAttr(card, 'tabindex', isActive ? '0' : '-1');
+          setAttr(card, 'aria-expanded', isOpen ? 'true' : 'false');
           setCoverHint(card, index);
         });
+
         const counter = gallery.parentElement?.querySelector('.sakura-index-footer strong');
         if (counter) {
-          counter.innerHTML = `${String(active + 1).padStart(2, '0')} <em>/</em> ${String(cards.length).padStart(2, '0')}`;
+          const value = `${String(active + 1).padStart(2, '0')} / ${String(cards.length).padStart(2, '0')}`;
+          if (counter.dataset.carouselValue !== value) {
+            counter.dataset.carouselValue = value;
+            counter.innerHTML = `${String(active + 1).padStart(2, '0')} <em>/</em> ${String(cards.length).padStart(2, '0')}`;
+          }
         }
         internalSync = false;
       });
@@ -80,13 +93,9 @@
       }
     };
 
-    const onScroll = () => updateActiveFromCenter();
-
     const onWheel = (event) => {
       if (internalSync) return;
-      const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY)
-        ? event.deltaX
-        : event.deltaY;
+      const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
       if (!delta) return;
       event.preventDefault();
       event.stopPropagation();
@@ -151,10 +160,11 @@
     };
 
     const onKeyDown = (event) => {
-      const keys = ['ArrowLeft', 'ArrowRight', 'Home', 'End', 'Enter', ' ' , 'Escape'];
+      const keys = ['ArrowLeft', 'ArrowRight', 'Home', 'End', 'Enter', ' ', 'Escape'];
       if (!keys.includes(event.key)) return;
       const cards = getCards();
       if (!cards.length) return;
+
       if (event.key === 'Escape') {
         if (open !== null) {
           open = null;
@@ -164,6 +174,7 @@
         }
         return;
       }
+
       if (event.key === 'Enter' || event.key === ' ') {
         open = open === active ? null : active;
         sync();
@@ -172,6 +183,7 @@
         event.stopPropagation();
         return;
       }
+
       let next = active;
       if (event.key === 'ArrowLeft') next = Math.max(0, active - 1);
       if (event.key === 'ArrowRight') next = Math.min(cards.length - 1, active + 1);
@@ -192,7 +204,7 @@
     gallery.addEventListener('pointercancel', endDrag, { capture: true });
     gallery.addEventListener('click', onClick, { capture: true });
     gallery.addEventListener('keydown', onKeyDown, { capture: true });
-    gallery.addEventListener('scroll', onScroll, { passive: true });
+    gallery.addEventListener('scroll', updateActiveFromCenter, { passive: true });
 
     const observer = new MutationObserver(() => {
       if (!document.body.contains(gallery)) return;
@@ -219,7 +231,7 @@
     }
   };
 
-  const observer = new MutationObserver(() => init());
+  const observer = new MutationObserver(init);
   observer.observe(document.documentElement, { childList: true, subtree: true });
   init();
 })();
