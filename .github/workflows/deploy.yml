@@ -40,6 +40,11 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Copy public root assets
+        run: |
+          mkdir -p dist/assets
+          cp -R assets/. dist/assets/
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
