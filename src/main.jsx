@@ -13,13 +13,55 @@ const pages = [
   ['contact', 'CONTACT'],
 ];
 
-const capabilities = [
-  { n:'01', title:'CUSTOM WEBSITES', eyebrow:'DESIGN + BUILD', copy:'Distinct digital spaces shaped around the business, its audience and the feeling it should leave behind.', tools:['HTML','CSS','JavaScript','React'], output:'Responsive production-ready website' },
-  { n:'02', title:'LANDING PAGES', eyebrow:'CLARITY + CONVERSION', copy:'High-clarity pages that make the important thing obvious without turning the experience into a template.', tools:['TypeScript','React','Vite'], output:'Fast focused campaign page' },
-  { n:'03', title:'REDESIGN', eyebrow:'SYSTEM + DIRECTION', copy:'A stronger visual language, cleaner hierarchy and more intentional interaction for an existing site.', tools:['UI Design','CSS','React'], output:'New visual system + interface' },
-  { n:'04', title:'RESPONSIVE UI', eyebrow:'EVERY SCREEN', copy:'Layouts that remain composed and readable from wide desktop screens to compact phones.', tools:['CSS','React','TypeScript'], output:'Adaptive responsive interface' },
-  { n:'05', title:'UI / VISUAL DESIGN', eyebrow:'DETAIL + MOTION', copy:'Typography, spacing, surfaces, motion and composition treated as one system.', tools:['Figma mindset','CSS','Framer Motion'], output:'Reusable visual language' },
-  { n:'06', title:'PERFORMANCE', eyebrow:'POLISH + SPEED', copy:'Lean builds, restrained assets and deliberate animation so the polish still feels fast.', tools:['Vite','Git','Linux'], output:'Optimized production build' },
+const infoCards = [
+  {
+    id: 'projects',
+    number: '01',
+    eyebrow: 'WHAT I BUILD',
+    title: 'PROJECTS',
+    summary: 'A look at the things I actually build — from business websites to immersive interfaces and visual experiments.',
+    tone: 'sakura',
+  },
+  {
+    id: 'tools',
+    number: '02',
+    eyebrow: 'THE STACK',
+    title: 'TOOLS + CODE',
+    summary: 'The languages, frameworks and tools behind the interfaces — organized by what they are used for.',
+    tone: 'silver',
+  },
+  {
+    id: 'learning',
+    number: '03',
+    eyebrow: 'CURRENTLY EXPLORING',
+    title: 'LEARNING',
+    summary: 'What I am actively studying and experimenting with to make the next build better than the last one.',
+    tone: 'pink',
+  },
+  {
+    id: 'about',
+    number: '04',
+    eyebrow: 'THE PERSON BEHIND IT',
+    title: 'ABOUT ME',
+    summary: 'A little more context about how I think, what I care about and the kind of work I want to create.',
+    tone: 'dark',
+  },
+  {
+    id: 'services',
+    number: '05',
+    eyebrow: 'FOR CLIENTS',
+    title: 'SERVICES',
+    summary: 'A compact view of the work I can take from first idea to polished, responsive delivery.',
+    tone: 'silver',
+  },
+  {
+    id: 'experiments',
+    number: '06',
+    eyebrow: 'SIDE LAB',
+    title: 'EXPERIMENTS',
+    summary: 'Motion, glass, depth, canvas effects and strange little interactions built simply because they are interesting.',
+    tone: 'sakura',
+  },
 ];
 
 const tools = ['HTML','CSS','JavaScript','TypeScript','React','Next.js','Framer Motion','Vite','Git','Linux','UI Design'];
@@ -110,7 +152,7 @@ function Home() {
       <div className="bridge-grid"><div><p className="mega">I make small businesses <i>look like they mean it.</i></p></div><div className="bridge-copy"><p>I design and build websites where typography, spacing, motion and hierarchy all point in the same direction.</p><p className="muted">Instead of adding more, I look for what can be removed.</p><GlassButton href="#/about">ABOUT THE APPROACH <b>↗</b></GlassButton></div></div>
     </section>
     <section className="sakura-quote depth-scene">
-      <div className="sakura-back" style={{backgroundImage:`url(${SAKURA_IMAGE})`}}/><div className="sakura-front" style={{backgroundImage:`url(${SAKURA_IMAGE})`}}/><div className="sakura-shine"/><div className="quote-content"><span>02 / PRINCIPLE</span><h2>GOOD DESIGN DOESN'T<br/><i>SHOUT.</i></h2><a href="#/select">SEE HOW IT IS BUILT ↗</a></div>
+      <div className="sakura-back" style={{backgroundImage:`url(${SAKURA_IMAGE})`}}/><div className="sakura-front" style={{backgroundImage:`url(${SAKURA_IMAGE})`}}/><div className="sakura-shine"/><div className="quote-content"><span>02 / PRINCIPLE</span><h2>GOOD DESIGN DOESN'T<br/><i>SHOUT.</i></h2><a href="#/select">OPEN THE INDEX ↗</a></div>
     </section>
   </main>;
 }
@@ -123,13 +165,38 @@ function About() {
   </main>;
 }
 
+function CardContent({id}) {
+  if (id === 'projects') return <div className="expanded-block"><div className="expanded-lead">A small archive of real builds and visual systems.</div><div className="project-items"><article><span>01 / CLIENT SITE</span><h3>ROYAL TOUCH</h3><p>Mobile wash website direction with a dark blue / gold visual system, service presentation and conversion-focused structure.</p><div className="tag-row"><span>HTML</span><span>CSS</span><span>FORMSPREE</span><span>RESPONSIVE UI</span></div></article><article><span>02 / PORTFOLIO</span><h3>FOG</h3><p>This portfolio itself: cinematic imagery, glass UI, page transitions, snow ambience and layered depth built to stay lightweight.</p><div className="tag-row"><span>REACT</span><span>VITE</span><span>CSS</span><span>GITHUB PAGES</span></div></article></div></div>;
+  if (id === 'tools') return <div className="expanded-block"><div className="expanded-lead">A compact map of the stack behind the work.</div><div className="tool-groups"><div><span>STRUCTURE</span><strong>HTML · CSS · JavaScript</strong><p>The foundation for semantic structure, responsive layout and interaction.</p></div><div><span>APPLICATION</span><strong>TypeScript · React · Next.js</strong><p>For component systems, state, routing and larger interface builds.</p></div><div><span>MOTION</span><strong>Framer Motion · CSS</strong><p>Used for transitions, depth, micro-interactions and quiet movement.</p></div><div><span>WORKFLOW</span><strong>Vite · Git · Linux</strong><p>Fast local development, version control and a Linux-first workflow.</p></div></div></div>;
+  if (id === 'learning') return <div className="expanded-block"><div className="expanded-lead">The things getting deliberate time right now.</div><div className="learning-list"><div><span>01</span><strong>Advanced React architecture</strong><em>COMPONENT SYSTEMS</em></div><div><span>02</span><strong>TypeScript depth</strong><em>TYPES · DATA FLOW</em></div><div><span>03</span><strong>Interaction + motion</strong><em>TRANSITIONS · DEPTH</em></div><div><span>04</span><strong>Performance craft</strong><em>LIGHTER BUILDS</em></div><div><span>05</span><strong>Modern frontend patterns</strong><em>ACCESSIBILITY · RESPONSIVE UI</em></div></div></div>;
+  if (id === 'about') return <div className="expanded-block"><div className="about-card-grid"><div><span>FOCUS</span><strong>WEB / UI</strong><p>Interfaces that feel deliberate without becoming over-designed.</p></div><div><span>APPROACH</span><strong>DESIGN · BUILD · REFINE</strong><p>Start with the hierarchy, then make the code serve the idea.</p></div><div><span>STYLE</span><strong>MINIMAL · IMMERSIVE</strong><p>Dark surfaces, typography, glass, depth and controlled motion.</p></div><div><span>GOAL</span><strong>MAKE IT CLEAR</strong><p>Give every important thing enough space to be understood.</p></div></div></div>;
+  if (id === 'services') return <div className="expanded-block"><div className="service-pills">{['CUSTOM WEBSITES','LANDING PAGES','REDESIGN','RESPONSIVE UI','UI / VISUAL DESIGN','PERFORMANCE'].map((x,i)=><div key={x}><span>0{i+1}</span><strong>{x}</strong></div>)}</div><p className="expanded-note">From a first layout to the final responsive pass, the goal is the same: make the important thing obvious.</p></div>;
+  return <div className="expanded-block"><div className="experiment-grid"><div><span>DEPTH</span><strong>LAYERED PHOTOGRAPHY</strong><p>Multiple image planes, blur and scale create depth without WebGL.</p></div><div><span>SNOW</span><strong>CANVAS ATMOSPHERE</strong><p>One lightweight canvas gives the entire site a shared seasonal layer.</p></div><div><span>GLASS</span><strong>SMOKED SURFACES</strong><p>Blur, transparency, highlights and subtle borders create the interface material.</p></div><div><span>TRANSITIONS</span><strong>ROUTE WASH</strong><p>Hash-page changes use a full-screen transition to make navigation feel like a scene change.</p></div></div></div>;
+}
+
 function Select() {
-  const [open,setOpen]=useState('01');
-  return <main className="page internal-page select-page"><section className="page-heading"><span>02 / SELECT</span><h1>Pick a layer.<br/><i>Open it.</i></h1><p>Services, tools and the way I think about building digital experiences — organized as a set of expandable glass cards.</p></section><section className="select-grid">{capabilities.map(card=>{const isOpen=open===card.n;return <article className={`select-card glass ${isOpen?'open':''}`} key={card.n}><button onClick={()=>setOpen(isOpen?'':card.n)}><span>{card.n}</span><div><small>{card.eyebrow}</small><h2>{card.title}</h2></div><b>{isOpen?'−':'+'}</b></button><div className="select-body"><p>{card.copy}</p><div className="select-meta"><div><small>BUILT WITH</small><div className="chips">{card.tools.map(t=><span key={t}>{t}</span>)}</div></div><div><small>DELIVERS</small><strong>{card.output}</strong></div></div></div></article>})}</section><section className="tool-wall"><div className="section-code">03 / TOOLKIT</div><div className="tool-cloud">{tools.map((tool,i)=><span key={tool} style={{'--i':i}}>{tool}</span>)}</div></section></main>;
+  const [open,setOpen]=useState('projects');
+  return <main className="page internal-page select-page">
+    <section className="page-heading"><span>02 / SELECT</span><h1>A set of<br/><i>things about me.</i></h1><p>Not a list. A collection of cards. Open one to see projects, tools, learning, services, experiments and the thinking behind the work.</p></section>
+    <section className="info-card-grid">
+      {infoCards.map(card=>{
+        const isOpen=open===card.id;
+        return <article key={card.id} className={`info-card ${isOpen?'is-open':''} tone-${card.tone}`}>
+          <button className="info-card-head" onClick={()=>setOpen(isOpen?'':card.id)} aria-expanded={isOpen}>
+            <span className="info-card-number">{card.number}</span>
+            <span className="info-card-title"><small>{card.eyebrow}</small><strong>{card.title}</strong><em>{card.summary}</em></span>
+            <span className="info-card-plus">{isOpen?'−':'+'}</span>
+          </button>
+          <div className="info-card-reveal"><CardContent id={card.id}/></div>
+        </article>;
+      })}
+    </section>
+    <section className="tool-wall"><div className="section-code">07 / QUICK TOOLKIT</div><div className="tool-cloud">{tools.map(tool=><span key={tool}>{tool}</span>)}</div></section>
+  </main>;
 }
 
 function Contact() {
-  return <main className="page contact-page depth-scene"><div className="contact-back" style={{backgroundImage:`url(${BONSai_IMAGE})`}}/><div className="contact-back-blur" style={{backgroundImage:`url(${BONSai_IMAGE})`}}/><div className="contact-shine"/><section className="contact-inner"><span>03 / CONTACT</span><h1>Let's make<br/><i>it clear.</i></h1><p>Have something worth building?</p><div className="button-row"><GlassButton href={FIVERR_URL} light>START A PROJECT ↗</GlassButton><GlassButton href="#/select">EXPLORE SERVICES ↗</GlassButton></div></section><div className="contact-footer"><span>DESIGN · BUILD · REFINE</span><span>© 2026</span></div></main>;
+  return <main className="page contact-page depth-scene"><div className="contact-back" style={{backgroundImage:`url(${BONSai_IMAGE})`}}/><div className="contact-back-blur" style={{backgroundImage:`url(${BONSai_IMAGE})`}}/><div className="contact-shine"/><section className="contact-inner"><span>03 / CONTACT</span><h1>Let's make<br/><i>it clear.</i></h1><p>Have something worth building?</p><div className="button-row"><GlassButton href={FIVERR_URL} light>START A PROJECT ↗</GlassButton><GlassButton href="#/select">OPEN SELECT ↗</GlassButton></div></section><div className="contact-footer"><span>DESIGN · BUILD · REFINE</span><span>© 2026</span></div></main>;
 }
 
 function Transition({route}) { return <div key={route} className="route-wash"><span>{route.toUpperCase()}</span></div>; }
