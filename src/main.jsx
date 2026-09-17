@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import * as THREE from 'three';
 import './styles.css';
 
+const FIVERR_URL = 'https://www.fiverr.com/s/432lpeR';
+
 const projects = [
   { n: '01', name: 'ROYAL TOUCH', type: 'Mobile car wash website.', tags: 'Brand identity · Service presentation · Conversion', className: 'project-wash' },
   { n: '02', name: 'FOREST', type: 'Experimental immersive portfolio.', tags: 'WebGL · Atmosphere · Interaction', className: 'project-forest' },
@@ -41,11 +43,10 @@ function Forest({ progress }) {
     const host = mount.current;
     if (!host) return undefined;
 
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    state.current.reduced = reduced;
-
+    state.current.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let renderer;
     let animationFrame;
+    let cleanup;
 
     try {
       const scene = new THREE.Scene();
@@ -55,7 +56,11 @@ function Forest({ progress }) {
       const camera = new THREE.PerspectiveCamera(53, 1, 0.1, 260);
       camera.position.set(0, 1.6, 20);
 
-      renderer = new THREE.WebGLRenderer({ antialias: !reduced, alpha: false, powerPreference: 'high-performance' });
+      renderer = new THREE.WebGLRenderer({
+        antialias: !state.current.reduced,
+        alpha: false,
+        powerPreference: 'high-performance',
+      });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.35));
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -96,7 +101,6 @@ function Forest({ progress }) {
       canopyLayers.forEach((mesh) => { mesh.instanceMatrix.setUsage(THREE.StaticDrawUsage); forest.add(mesh); });
 
       const dummy = new THREE.Object3D();
-      let treeIndex = 0;
       for (let i = 0; i < 150; i += 1) {
         const z = 17 - seed(i * 1.91) * 128;
         const depth = THREE.MathUtils.clamp((z + 110) / 127, 0, 1);
@@ -107,25 +111,23 @@ function Forest({ progress }) {
         const trunkRadius = 0.11 + seed(i * 8.3) * 0.17;
 
         dummy.position.set(x, baseY + height * 0.5, z);
-        dummy.rotation.y = seed(i * 9.4) * Math.PI;
+        dummy.rotation.set(0, seed(i * 9.4) * Math.PI, 0);
         dummy.scale.set(trunkRadius, height, trunkRadius * (0.86 + seed(i * 2.8) * 0.25));
         dummy.updateMatrix();
-        trunks.setMatrixAt(treeIndex, dummy.matrix);
+        trunks.setMatrixAt(i, dummy.matrix);
 
-        const crownCount = 4;
-        for (let layer = 0; layer < crownCount; layer += 1) {
+        for (let layer = 0; layer < 4; layer += 1) {
           const size = (1 - layer * 0.14) * (1.15 + seed(i * 1.4 + layer) * 0.9) * (height * 0.085);
           dummy.position.set(
             x + (seed(i * 3 + layer) - 0.5) * 0.35,
             baseY + height * (0.52 + layer * 0.105),
-            z
+            z,
           );
           dummy.rotation.set(0, seed(i * 9.4 + layer) * Math.PI, 0);
           dummy.scale.set(size, height * (0.22 - layer * 0.022), size * (0.88 + depth * 0.1));
           dummy.updateMatrix();
-          canopyLayers[layer].setMatrixAt(treeIndex, dummy.matrix);
+          canopyLayers[layer].setMatrixAt(i, dummy.matrix);
         }
-        treeIndex += 1;
       }
 
       trunks.instanceMatrix.needsUpdate = true;
@@ -171,9 +173,9 @@ function Forest({ progress }) {
       const clock = new THREE.Clock();
       const animate = () => {
         const elapsed = clock.getElapsedTime();
-        const current = state.current;
-        current.progress += ((current.reduced ? Math.min(progress, 1) : progress) - current.progress) * 0.055;
-        const p = THREE.MathUtils.smoothstep(current.progress, 0, 1);
+        const targetProgress = state.current.progress;
+        state.current.progress += (targetProgress - state.current.progress) * 0.035;
+        const p = THREE.MathUtils.smoothstep(state.current.progress, 0, 1);
 
         const targetZ = 20 - p * 112;
         const targetX = Math.sin(elapsed * 0.055) * 0.7 + Math.sin(p * Math.PI) * 1.2;
@@ -182,7 +184,7 @@ function Forest({ progress }) {
         camera.position.y += (targetY - camera.position.y) * 0.04;
         camera.position.z += (targetZ - camera.position.z) * 0.055;
         camera.rotation.x += ((-0.012 + Math.sin(p * Math.PI) * 0.004) - camera.rotation.x) * 0.03;
-        camera.rotation.y += ((Math.sin(elapsed * 0.035) * 0.004) - camera.rotation.y) * 0.03;
+        camera.rotation.y += (Math.sin(elapsed * 0.035) * 0.004 - camera.rotation.y) * 0.03;
 
         forest.rotation.y = Math.sin(elapsed * 0.035) * 0.005;
         particles.rotation.y = elapsed * 0.012;
@@ -200,7 +202,7 @@ function Forest({ progress }) {
       };
       animate();
 
-      return () => {
+      cleanup = () => {
         cancelAnimationFrame(animationFrame);
         window.removeEventListener('resize', resize);
         renderer.dispose();
@@ -219,19 +221,16 @@ function Forest({ progress }) {
     } catch (error) {
       console.error('WebGL forest failed to initialize:', error);
       setFallback(true);
-      return undefined;
     }
+
+    return () => cleanup?.();
   }, []);
 
   useEffect(() => {
     state.current.progress = progress;
   }, [progress]);
 
-  return (
-    <div ref={mount} className={`forest-runtime ${fallback ? 'forest-fallback' : ''}`} aria-hidden="true">
-      {fallback && <div className="forest-fallback-copy">ATMOSPHERE / FALLBACK</div>}
-    </div>
-  );
+  return <div ref={mount} className={`forest-runtime ${fallback ? 'forest-fallback' : ''}`} aria-hidden="true">{fallback && <div className="forest-fallback-copy">ATMOSPHERE / FALLBACK</div>}</div>;
 }
 
 function App() {
@@ -268,7 +267,7 @@ function App() {
             <a href="#work">WORK</a>
             <a href="#services">SERVICES</a>
             <a href="#contact">CONTACT</a>
-            <a href="https://www.fiverr.com/s/432lpeR" target="_blank" rel="noreferrer">FIVERR ↗</a>
+            <a href={FIVERR_URL} target="_blank" rel="noreferrer">FIVERR ↗</a>
           </nav>
         </header>
 
@@ -292,7 +291,7 @@ function App() {
 
       <main>
         <section className="section about" id="about">
-          <div className="section-top"><span>01 / ABOUT</span><a href="https://www.fiverr.com/s/432lpeR" target="_blank" rel="noreferrer">START ON FIVERR ↗</a></div>
+          <div className="section-top"><span>01 / ABOUT</span><a href={FIVERR_URL} target="_blank" rel="noreferrer">START ON FIVERR ↗</a></div>
           <div className="split">
             <h2>I make small businesses <em>look like they mean it.</em></h2>
             <div>
@@ -336,7 +335,7 @@ function App() {
         <section className="contact" id="contact">
           <div className="contact-orb" />
           <div className="section-top"><span>06 / CONTACT</span><span>LET'S MAKE IT CLEAR</span></div>
-          <div className="contact-inner"><p>HAVE SOMETHING WORTH BUILDING?</p><h2>Let's make<br /><em>it clear.</em></h2><div className="contact-links"><a href="mailto:hello@example.com">START A PROJECT ↗</a><a href="https://www.fiverr.com/s/432lpeR" target="_blank" rel="noreferrer">FIVERR ↗</a></div></div>
+          <div className="contact-inner"><p>HAVE SOMETHING WORTH BUILDING?</p><h2>Let's make<br /><em>it clear.</em></h2><div className="contact-links"><a href={FIVERR_URL} target="_blank" rel="noreferrer">START A PROJECT ↗</a><a href={FIVERR_URL} target="_blank" rel="noreferrer">FIVERR ↗</a></div></div>
         </section>
       </main>
 
