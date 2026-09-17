@@ -252,8 +252,6 @@ function App() {
         <span>DESIGN · BUILD · REFINE</span>
         <span>© 2026</span>
       </footer>
-
-      <div className="cursor-orb" aria-hidden="true" />
     </div>
   );
 }
