@@ -70,14 +70,15 @@ function Snowfall() {
     const dots = [];
     const seed = () => ({ x: Math.random() * w, y: Math.random() * h, r: .45 + Math.random() * 2.4, v: 10 + Math.random() * 28, d: .25 + Math.random() * .95, a: .12 + Math.random() * .5, p: Math.random() * 6.28 });
     const resize = () => {
-      w = innerWidth; h = innerHeight; dpr = Math.min(devicePixelRatio || 1, 1.35);
+      w = innerWidth; h = innerHeight; dpr = Math.min(devicePixelRatio || 1, 1.1);
       canvas.width = w * dpr; canvas.height = h * dpr; canvas.style.width = `${w}px`; canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); dots.length = 0;
-      const count = w < 700 ? 58 : w < 1200 ? 86 : 112;
+      const count = w < 700 ? 32 : w < 1200 ? 52 : 72;
       for (let i = 0; i < count; i++) dots.push(seed());
     };
     const draw = (now) => {
-      const dt = Math.min(.035, (now - last) / 1000); last = now; time += dt; ctx.clearRect(0, 0, w, h);
+      if (now - last < 22) { frame = requestAnimationFrame(draw); return; }
+      const dt = Math.min(.04, (now - last) / 1000); last = now; time += dt; ctx.clearRect(0, 0, w, h);
       for (const s of dots) {
         if (!reduce) { s.y += s.v * s.d * dt; s.x += (Math.sin(time * .55 + s.p) * 5 + 2) * s.d * dt; }
         if (s.y > h + 12) { s.y = -10; s.x = Math.random() * w; }
