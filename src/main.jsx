@@ -13,10 +13,8 @@ const pages = [
   ['contact', 'CONTACT'],
 ];
 
-const RAW_MY = 'https://cdn.jsdelivr.net/gh/b-1-o/my@main/assets/';
-
 const sakuraCards = [
-  { number:'01', label:'WHAT I BUILD', title:'PROJECTS', image:'./assets/sakura-01.svg', accent:'Builds with a point of view.', text:'A selection of the things I actually build — business websites, immersive interfaces and visual experiments.', items:['Royal Touch — business website direction','FOG — this portfolio and visual experiment','Landing pages, responsive interfaces and redesigns'], meta:'WEB · UI · RESPONSIVE' },
+  { number:'01', label:'WHAT I BUILD', title:'PROJECTS', image:'https://images.unsplash.com/photo-1555099855-9ecf5abc5cb2?auto=format&fit=crop&w=900&q=78', accent:'Builds with a point of view.', text:'A selection of the things I actually build — business websites, immersive interfaces and visual experiments.', items:['Royal Touch — business website direction','FOG — this portfolio and visual experiment','Landing pages, responsive interfaces and redesigns'], meta:'WEB · UI · RESPONSIVE' },
   { number:'02', label:'THE STACK', title:'TOOLS + CODE', image:'./assets/sakura-02.svg', accent:'The machinery behind the image.', text:'The technologies behind the interfaces: enough engineering to make the visual idea fast, responsive and maintainable.', items:['HTML · CSS · JavaScript','TypeScript · React · Next.js','Vite · Git · Linux · Framer Motion'], meta:'FRONTEND · SYSTEMS · MOTION' },
   { number:'03', label:'CURRENTLY EXPLORING', title:'LEARNING', image:'./assets/sakura-03.svg', accent:'Always one layer deeper.', text:'The current focus is on cleaner systems, richer interactions and lighter experiences.', items:['Advanced React architecture','TypeScript depth and data flow','Interaction, motion and frontend performance'], meta:'STUDY · TEST · REFINE' },
   { number:'04', label:'THE PERSON BEHIND IT', title:'ABOUT ME', image:'./assets/sakura-04.svg', accent:'Less noise. More intent.', text:'I care about hierarchy, atmosphere and the small details that make a digital product feel considered.', items:['Focus — web / UI','Style — minimal / immersive','Approach — design · build · refine'], meta:'CLARITY · DETAIL · RESTRAINT' },
@@ -116,11 +114,11 @@ function SakuraCarousel() {
   const [active, setActive] = useState(0);
   const [open, setOpen] = useState(null);
 
-  const clamp = (value, min = 0, max = sakuraCards.length - 1) => Math.max(min, Math.min(max, value));
   const wrap = (value, total) => ((value + total / 2) % total + total) % total - total / 2;
+  const modulo = (value, total) => ((value % total) + total) % total;
 
   const setActiveIndex = (index) => {
-    const next = Math.max(0, Math.min(sakuraCards.length - 1, Math.round(index)));
+    const next = modulo(Math.round(index), sakuraCards.length);
     if (activeRef.current === next) return;
     activeRef.current = next;
     setActive(next);
@@ -175,8 +173,15 @@ function SakuraCarousel() {
   };
 
   const animateTo = (value) => {
-    targetRef.current = clamp(value);
+    targetRef.current = value;
     requestRender();
+  };
+
+  const nearestVirtualIndex = (index) => {
+    const total = sakuraCards.length;
+    const current = targetRef.current;
+    const cycle = Math.round((current - index) / total);
+    return index + cycle * total;
   };
 
   const moveBy = (direction) => {
@@ -236,7 +241,7 @@ function SakuraCarousel() {
 
       if (drag.moved) {
         event.preventDefault();
-        targetRef.current = clamp(drag.startTarget - dx / 245);
+        targetRef.current = drag.startTarget - dx / 245;
         requestRender();
       }
     };
@@ -247,7 +252,7 @@ function SakuraCarousel() {
 
       if (drag.moved) {
         event.preventDefault();
-        targetRef.current = clamp(Math.round(targetRef.current));
+        targetRef.current = Math.round(targetRef.current);
         requestRender();
 
         suppressClickRef.current = true;
@@ -326,7 +331,7 @@ function SakuraCarousel() {
     const slot = wrap(index - phaseRef.current, sakuraCards.length);
 
     if (Math.abs(slot) >= 0.5) {
-      animateTo(index);
+      animateTo(nearestVirtualIndex(index));
       return;
     }
 
