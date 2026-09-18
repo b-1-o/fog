@@ -79,6 +79,9 @@
   box-shadow:0 0 26px rgba(255,255,255,.06);
 }
 .sakura-card{
+  appearance:none;-webkit-appearance:none;
+  padding:7px;margin:0;
+  color:#fff;text-align:left;font:inherit;
   --x:0px;--y:0px;--s:1;--r:0deg;--ry:0deg;--a:1;
   position:absolute;left:50%;top:50%;
   width:310px;height:430px;
