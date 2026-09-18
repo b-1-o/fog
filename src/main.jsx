@@ -109,133 +109,235 @@ function SakuraCarousel() {
   const phaseRef = useRef(0);
   const targetRef = useRef(0);
   const frameRef = useRef(0);
+  const activeRef = useRef(0);
   const dragRef = useRef(null);
+  const suppressClickRef = useRef(false);
+  const suppressTimerRef = useRef(0);
   const [active, setActive] = useState(0);
   const [open, setOpen] = useState(null);
 
-  const wrap = (v, total) => ((v + total / 2) % total + total) % total - total / 2;
+  const clamp = (value, min = 0, max = sakuraCards.length - 1) => Math.max(min, Math.min(max, value));
+  const wrap = (value, total) => ((value + total / 2) % total + total) % total - total / 2;
+
+  const setActiveIndex = (index) => {
+    const next = Math.max(0, Math.min(sakuraCards.length - 1, Math.round(index)));
+    if (activeRef.current === next) return;
+    activeRef.current = next;
+    setActive(next);
+  };
 
   const render = () => {
-    const total = sakuraCards.length;
-    const next = phaseRef.current + (targetRef.current - phaseRef.current) * 0.115;
-    phaseRef.current = Math.abs(targetRef.current - next) < 0.0004 ? targetRef.current : next;
+    const stage = stageRef.current;
+    if (!stage) {
+      frameRef.current = 0;
+      return;
+    }
 
-    const center = ((Math.round(phaseRef.current) % total) + total) % total;
-    if (center !== active) setActive(center);
+    const next = phaseRef.current + (targetRef.current - phaseRef.current) * 0.14;
+    phaseRef.current = Math.abs(targetRef.current - next) < 0.0005 ? targetRef.current : next;
+
+    const center = Math.round(phaseRef.current);
+    setActiveIndex(center);
+
+    const width = stage.clientWidth;
+    const step = width < 680 ? 255 : width < 1000 ? 300 : 330;
+    const total = sakuraCards.length;
 
     cardsRef.current.forEach((card, index) => {
       if (!card) return;
+
       const slot = wrap(index - phaseRef.current, total);
       const abs = Math.abs(slot);
-
-      const x = slot * 312 + slot * abs * 15;
-      const y = abs * abs * 9;
-      const scale = abs < 0.5 ? 1.075 : Math.max(0.72, 1 - abs * 0.075);
-      const rotate = slot * -3;
-      const rotateY = slot * -8;
-      const opacity = Math.max(0.12, 1 - Math.max(0, abs - 2.2) * 0.44);
+      const x = slot * step + slot * abs * 13;
+      const y = abs * abs * 8;
+      const scale = abs < 0.5 ? 1.06 : Math.max(0.72, 1 - abs * 0.078);
+      const rotate = slot * -3.2;
+      const rotateY = slot * -9;
+      const opacity = Math.max(0.08, 1 - Math.max(0, abs - 2.1) * 0.48);
 
       card.style.transform =
-        `translate3d(${x}px,${y}px,0) rotateZ(${rotate}deg) rotateY(${rotateY}deg) scale(${scale})`;
+        "translate3d(" + x + "px," + y + "px,0) rotateZ(" + rotate + "deg) rotateY(" + rotateY + "deg) scale(" + scale + ")";
       card.style.opacity = opacity;
-      card.style.zIndex = String(100 - Math.round(abs * 10));
-      card.classList.toggle('is-center', abs < 0.5);
+      card.style.zIndex = String(100 - Math.round(abs * 12));
+      card.classList.toggle("is-center", abs < 0.5);
       card.tabIndex = abs < 0.5 ? 0 : -1;
     });
 
-    if (Math.abs(targetRef.current - phaseRef.current) > 0.0004) {
+    if (Math.abs(targetRef.current - phaseRef.current) > 0.0005) {
       frameRef.current = requestAnimationFrame(render);
     } else {
       frameRef.current = 0;
     }
   };
 
-  const animateTo = (value) => {
-    targetRef.current = Math.max(0, Math.min(sakuraCards.length - 1, value));
+  const requestRender = () => {
     if (!frameRef.current) frameRef.current = requestAnimationFrame(render);
+  };
+
+  const animateTo = (value) => {
+    targetRef.current = clamp(value);
+    requestRender();
+  };
+
+  const moveBy = (direction) => {
+    animateTo(Math.round(targetRef.current) + direction);
   };
 
   useEffect(() => {
     const preload = sakuraCards.map((card) => {
       const image = new Image();
-      image.decoding = 'async';
+      image.decoding = "async";
+      image.loading = "eager";
       image.src = card.image;
       return image;
     });
 
     render();
 
+    const stage = stageRef.current;
+    if (!stage) return undefined;
+
+    const onWheel = (event) => {
+      if (open !== null) return;
+      const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+      if (!delta) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const direction = delta > 0 ? 1 : -1;
+      const current = Math.round(targetRef.current);
+      if (current !== targetRef.current) {
+        targetRef.current = current;
+      }
+      animateTo(current + direction);
+    };
+
+    const onPointerDown = (event) => {
+      if (open !== null) return;
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+
+      dragRef.current = {
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startTarget: targetRef.current,
+        moved: false,
+      };
+
+      event.preventDefault();
+    };
+
+    const onPointerMove = (event) => {
+      const drag = dragRef.current;
+      if (!drag || drag.pointerId !== event.pointerId || open !== null) return;
+
+      const dx = event.clientX - drag.startX;
+      if (Math.abs(dx) > 8) drag.moved = true;
+
+      if (drag.moved) {
+        event.preventDefault();
+        targetRef.current = clamp(drag.startTarget - dx / 245);
+        requestRender();
+      }
+    };
+
+    const onPointerUp = (event) => {
+      const drag = dragRef.current;
+      if (!drag || drag.pointerId !== event.pointerId) return;
+
+      if (drag.moved) {
+        event.preventDefault();
+        targetRef.current = clamp(Math.round(targetRef.current));
+        requestRender();
+
+        suppressClickRef.current = true;
+        window.clearTimeout(suppressTimerRef.current);
+        suppressTimerRef.current = window.setTimeout(() => {
+          suppressClickRef.current = false;
+        }, 260);
+      }
+
+      dragRef.current = null;
+    };
+
+    const onPointerCancel = (event) => {
+      dragRef.current = null;
+      suppressClickRef.current = false;
+      window.clearTimeout(suppressTimerRef.current);
+      if (event.cancelable) event.preventDefault();
+    };
+
+    stage.addEventListener("wheel", onWheel, { passive: false });
+    stage.addEventListener("pointerdown", onPointerDown, { passive: false });
+    window.addEventListener("pointermove", onPointerMove, { passive: false });
+    window.addEventListener("pointerup", onPointerUp, { passive: false });
+    window.addEventListener("pointercancel", onPointerCancel, { passive: false });
+
     return () => {
-      preload.forEach((image) => { image.onload = null; image.onerror = null; });
+      preload.forEach((image) => {
+        image.onload = null;
+        image.onerror = null;
+      });
+      stage.removeEventListener("wheel", onWheel);
+      stage.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerCancel);
+      window.clearTimeout(suppressTimerRef.current);
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
     };
-  }, []);
-
-  useEffect(() => {
-    if (open === null) return undefined;
-    const onKey = (event) => {
-      if (event.key === 'Escape') setOpen(null);
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
   }, [open]);
 
-  const onWheel = (event) => {
-    if (open !== null) return;
-    const delta = Math.abs(event.deltaY) >= Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
-    if (!delta) return;
-    event.preventDefault();
-    const amount = Math.max(-0.7, Math.min(0.7, delta * 0.0028));
-    animateTo(targetRef.current + amount);
-  };
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.key === "Escape") {
+        setOpen(null);
+        return;
+      }
 
-  const onPointerDown = (event) => {
-    if (open !== null) return;
-    if (event.pointerType === 'mouse' && event.button !== 0) return;
-    dragRef.current = {
-      id: event.pointerId,
-      startX: event.clientX,
-      lastX: event.clientX,
-      moved: false,
+      if (open !== null) return;
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        moveBy(1);
+      }
+
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        moveBy(-1);
+      }
     };
-    event.currentTarget.setPointerCapture?.(event.pointerId);
-  };
 
-  const onPointerMove = (event) => {
-    const drag = dragRef.current;
-    if (!drag || drag.id !== event.pointerId || open !== null) return;
-    const dx = event.clientX - drag.lastX;
-    if (Math.abs(event.clientX - drag.startX) > 7) drag.moved = true;
-    if (Math.abs(dx) > 1) {
-      event.preventDefault();
-      targetRef.current = Math.max(0, Math.min(sakuraCards.length - 1, targetRef.current - dx * 0.0065));
-      if (!frameRef.current) frameRef.current = requestAnimationFrame(render);
-      drag.lastX = event.clientX;
-    }
-  };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
 
-  const onPointerUp = (event) => {
-    const drag = dragRef.current;
-    if (!drag || drag.id !== event.pointerId) return;
-    if (drag.moved) {
-      targetRef.current = Math.round(targetRef.current);
-      if (!frameRef.current) frameRef.current = requestAnimationFrame(render);
-    }
-    dragRef.current = null;
-    event.currentTarget.releasePointerCapture?.(event.pointerId);
-  };
+  useEffect(() => {
+    requestRender();
+  }, []);
 
   const onCardClick = (index) => {
-    if (dragRef.current?.moved) {
-      dragRef.current.moved = false;
+    if (suppressClickRef.current) {
+      suppressClickRef.current = false;
+      window.clearTimeout(suppressTimerRef.current);
       return;
     }
+
     const slot = wrap(index - phaseRef.current, sakuraCards.length);
+
     if (Math.abs(slot) >= 0.5) {
       animateTo(index);
       return;
     }
-    setOpen(current => current === index ? null : index);
+
+    setOpen((current) => current === index ? null : index);
+  };
+
+  const onCardKeyDown = (event, index) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onCardClick(index);
+    }
   };
 
   return (
@@ -248,39 +350,36 @@ function SakuraCarousel() {
         <p>Scroll inside the gallery to move through the images. Bring one to the center, then click it to reveal the story, tools or work behind the image.</p>
       </div>
 
-      <div
-        className={'sakura-stage' + (open !== null ? ' is-open' : '')}
-        ref={stageRef}
-        onWheel={onWheel}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onPointerCancel={onPointerUp}
-      >
+      <div className={"sakura-stage" + (open !== null ? " is-open" : "")} ref={stageRef}>
         <div className="sakura-track">
           {sakuraCards.map((card, index) => (
             <button
               key={card.number}
               ref={(node) => { cardsRef.current[index] = node; }}
-              className={'sakura-card' + (active === index ? ' is-center' : '')}
+              className={"sakura-card" + (active === index ? " is-center" : "")}
               type="button"
               onClick={() => onCardClick(index)}
-              aria-label={'Open ' + card.title}
+              onKeyDown={(event) => onCardKeyDown(event, index)}
+              aria-label={"Open " + card.title}
+              aria-pressed={open === index}
               tabIndex={active === index ? 0 : -1}
             >
               <div className="sakura-card-media">
-                <img src={card.image} alt="" decoding="async" />
+                <img src={card.image} alt="" decoding="async" draggable="false" />
               </div>
               <div className="sakura-card-sheen" aria-hidden="true" />
               <span className="sakura-card-number">{card.number}</span>
               <div className="sakura-card-copy">
                 <small>{card.label}</small>
                 <strong>{card.title}</strong>
-                <em>{active === index ? 'CLICK TO REVEAL' : 'BRING TO CENTER'}</em>
+                <em>{active === index ? "CLICK TO REVEAL" : "BRING TO CENTER"}</em>
               </div>
             </button>
           ))}
         </div>
+
+        <button type="button" className="sakura-nav sakura-nav-prev" onClick={() => moveBy(-1)} aria-label="Previous card">←</button>
+        <button type="button" className="sakura-nav sakura-nav-next" onClick={() => moveBy(1)} aria-label="Next card">→</button>
 
         <div className="sakura-stage-side">
           <span className="sakura-live-dot" />
@@ -288,18 +387,20 @@ function SakuraCarousel() {
         </div>
 
         <div className="sakura-stage-hud">
-          <b>{String(active + 1).padStart(2, '0')}</b><em>/</em><span>07</span>
+          <b>{String(active + 1).padStart(2, "0")}</b><em>/</em><span>07</span>
         </div>
 
         <div
-          className={'sakura-open' + (open !== null ? ' is-open' : '')}
+          className={"sakura-open" + (open !== null ? " is-open" : "")}
           aria-hidden={open === null}
-          onClick={(event) => { if (event.target === event.currentTarget) setOpen(null); }}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) setOpen(null);
+          }}
         >
           {open !== null && (
             <>
               <div className="sakura-open-media">
-                <img src={sakuraCards[open].image} alt={sakuraCards[open].title} decoding="async" />
+                <img src={sakuraCards[open].image} alt={sakuraCards[open].title} decoding="async" draggable="false" />
               </div>
               <div className="sakura-open-body">
                 <div className="sakura-open-scroll">
@@ -323,7 +424,7 @@ function SakuraCarousel() {
 
       <div className="sakura-index-footer">
         <span><i /> DRAG · WHEEL · CLICK</span>
-        <strong>{String(active + 1).padStart(2, '0')} <em>/</em> 07</strong>
+        <strong aria-live="polite">{String(active + 1).padStart(2, "0")} <em>/</em> 07</strong>
       </div>
     </section>
   );
