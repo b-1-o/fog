@@ -16,13 +16,13 @@ const pages = [
 const RAW_MY = 'https://cdn.jsdelivr.net/gh/b-1-o/my@main/assets/';
 
 const sakuraCards = [
-  { number:'01', label:'WHAT I BUILD', title:'PROJECTS', image:RAW_MY+'09-tech-startup%20(1).png', position:'50% 50%', accent:'Builds with a point of view.', text:'A look at the work I actually build — from business websites to immersive interfaces and visual experiments.', items:['Royal Touch — business website direction','FOG — this portfolio and visual experiment','Landing pages, responsive interfaces and redesigns'], meta:'WEB · UI · RESPONSIVE' },
-  { number:'02', label:'THE STACK', title:'TOOLS + CODE', image:RAW_MY+'08-architect%20(1).png', position:'50% 50%', accent:'The machinery behind the image.', text:'The frontend stack used to turn a visual direction into a responsive, maintainable interface.', items:['HTML · CSS · JavaScript','TypeScript · React · Next.js','Vite · Git · Linux · Framer Motion'], meta:'FRONTEND · SYSTEMS · MOTION' },
-  { number:'03', label:'CURRENTLY EXPLORING', title:'LEARNING', image:RAW_MY+'01-graphic-designer%20(1).png', position:'50% 50%', accent:'Always one layer deeper.', text:'Current study is focused on stronger architecture, better interactions and lighter, more intentional builds.', items:['Advanced React architecture','TypeScript depth and data flow','Interaction, motion and frontend performance'], meta:'STUDY · TEST · REFINE' },
-  { number:'04', label:'THE PERSON BEHIND IT', title:'ABOUT ME', image:RAW_MY+'04-photographer%20(1).png', position:'50% 50%', accent:'Less noise. More intent.', text:'I care about hierarchy, atmosphere and small details that make a digital product feel considered rather than decorated.', items:['Focus — web / UI','Style — minimal / immersive','Approach — design · build · refine'], meta:'CLARITY · DETAIL · RESTRAINT' },
-  { number:'05', label:'FOR CLIENTS', title:'SERVICES', image:RAW_MY+'02-business-consultant%20(1).png', position:'50% 50%', accent:'From first frame to final pass.', text:'A practical set of services for small businesses and independent brands that need a polished web presence.', items:['Custom websites','Landing pages and redesigns','Responsive UI · visual design · performance'], meta:'BUILD · REDESIGN · DELIVERY' },
-  { number:'06', label:'SIDE LAB', title:'EXPERIMENTS', image:RAW_MY+'07-restaurant%20(1).png', position:'50% 50%', accent:'Make the interface breathe.', text:'Motion, glass, depth and tiny interactions built because the web becomes more interesting when it can feel cinematic.', items:['Layered photography and depth','Canvas snowfall and atmosphere','Glass surfaces and scene transitions'], meta:'MOTION · DEPTH · ATMOSPHERE' },
-  { number:'07', label:'VISUAL LANGUAGE', title:'DIRECTION', image:RAW_MY+'10-florist%20(1).png', position:'50% 50%', accent:'A quiet visual language.', text:'Monochrome imagery, restrained pink, smoked glass and editorial typography shape the visual language of this portfolio.', items:['Monochrome imagery','Smoked glass surfaces','Editorial typography + restrained motion'], meta:'IMAGE · TYPE · ATMOSPHERE' },
+  { number:'01', label:'WHAT I BUILD', title:'PROJECTS', image:'./assets/sakura-01.svg', accent:'Builds with a point of view.', text:'A selection of the things I actually build — business websites, immersive interfaces and visual experiments.', items:['Royal Touch — business website direction','FOG — this portfolio and visual experiment','Landing pages, responsive interfaces and redesigns'], meta:'WEB · UI · RESPONSIVE' },
+  { number:'02', label:'THE STACK', title:'TOOLS + CODE', image:'./assets/sakura-02.svg', accent:'The machinery behind the image.', text:'The technologies behind the interfaces: enough engineering to make the visual idea fast, responsive and maintainable.', items:['HTML · CSS · JavaScript','TypeScript · React · Next.js','Vite · Git · Linux · Framer Motion'], meta:'FRONTEND · SYSTEMS · MOTION' },
+  { number:'03', label:'CURRENTLY EXPLORING', title:'LEARNING', image:'./assets/sakura-03.svg', accent:'Always one layer deeper.', text:'The current focus is on cleaner systems, richer interactions and lighter experiences.', items:['Advanced React architecture','TypeScript depth and data flow','Interaction, motion and frontend performance'], meta:'STUDY · TEST · REFINE' },
+  { number:'04', label:'THE PERSON BEHIND IT', title:'ABOUT ME', image:'./assets/sakura-04.svg', accent:'Less noise. More intent.', text:'I care about hierarchy, atmosphere and the small details that make a digital product feel considered.', items:['Focus — web / UI','Style — minimal / immersive','Approach — design · build · refine'], meta:'CLARITY · DETAIL · RESTRAINT' },
+  { number:'05', label:'FOR CLIENTS', title:'SERVICES', image:'./assets/sakura-05.svg', accent:'From first frame to final pass.', text:'A practical set of web services for small businesses and independent brands.', items:['Custom websites','Landing pages and redesigns','Responsive UI · visual design · performance'], meta:'BUILD · REDESIGN · DELIVERY' },
+  { number:'06', label:'SIDE LAB', title:'EXPERIMENTS', image:'./assets/sakura-06.svg', accent:'Make the interface breathe.', text:'Motion, glass, depth and small interactions built because the web becomes more interesting when it can feel cinematic.', items:['Layered photography and depth','Canvas snowfall and atmosphere','Glass surfaces and scene transitions'], meta:'MOTION · DEPTH · ATMOSPHERE' },
+  { number:'07', label:'VISUAL LANGUAGE', title:'DIRECTION', image:'./assets/sakura-07.svg', accent:'A quiet visual language.', text:'Pink sakura against black, smoked glass, editorial type and restrained motion define the visual direction.', items:['Pink sakura on black','Smoked glass surfaces','Editorial typography + restrained motion'], meta:'IMAGE · TYPE · ATMOSPHERE' },
 ];
 
 function routeFromHash() {
@@ -105,238 +105,137 @@ function JumpToCarousel({ children }) {
 
 function SakuraCarousel() {
   const stageRef = useRef(null);
-  const cardRefs = useRef([]);
+  const cardsRef = useRef([]);
   const phaseRef = useRef(0);
   const targetRef = useRef(0);
-  const rafRef = useRef(0);
-  const pointerRef = useRef(null);
-  const openRef = useRef(null);
-  const activeRef = useRef(0);
-  const pendingIndexRef = useRef(null);
-  const lastCenterRef = useRef(-1);
+  const frameRef = useRef(0);
+  const dragRef = useRef(null);
   const [active, setActive] = useState(0);
   const [open, setOpen] = useState(null);
 
-  useEffect(() => { openRef.current = open; }, [open]);
-
-  const wrap = (value, total) => ((value + total / 2) % total + total) % total - total / 2;
+  const wrap = (v, total) => ((v + total / 2) % total + total) % total - total / 2;
 
   const render = () => {
     const total = sakuraCards.length;
-    const phase = phaseRef.current + (targetRef.current - phaseRef.current) * 0.12;
-    phaseRef.current = Math.abs(targetRef.current - phase) < 0.00035 ? targetRef.current : phase;
+    const next = phaseRef.current + (targetRef.current - phaseRef.current) * 0.115;
+    phaseRef.current = Math.abs(targetRef.current - next) < 0.0004 ? targetRef.current : next;
 
-    const settled = Math.abs(targetRef.current - phaseRef.current) < 0.00035;
-    const centerIndex = ((Math.round(phaseRef.current) % total) + total) % total;
+    const center = ((Math.round(phaseRef.current) % total) + total) % total;
+    if (center !== active) setActive(center);
 
-    cardRefs.current.forEach((card, index) => {
+    cardsRef.current.forEach((card, index) => {
       if (!card) return;
       const slot = wrap(index - phaseRef.current, total);
       const abs = Math.abs(slot);
-      const x = slot * 306 + slot * abs * 17;
-      const y = abs * abs * 10;
-      const scale = abs < 0.46 ? 1.06 : Math.max(0.72, 1 - abs * 0.078);
-      const rotate = slot * -3.1;
-      const rotateY = slot * -8.2;
-      const opacity = Math.max(0.12, 1 - Math.max(0, abs - 2.25) * 0.42);
 
-      card.style.setProperty('--x', String(x) + 'px');
-      card.style.setProperty('--y', String(y) + 'px');
-      card.style.setProperty('--s', scale.toFixed(4));
-      card.style.setProperty('--r', String(rotate) + 'deg');
-      card.style.setProperty('--ry', String(rotateY) + 'deg');
-      card.style.setProperty('--a', opacity.toFixed(3));
+      const x = slot * 312 + slot * abs * 15;
+      const y = abs * abs * 9;
+      const scale = abs < 0.5 ? 1.075 : Math.max(0.72, 1 - abs * 0.075);
+      const rotate = slot * -3;
+      const rotateY = slot * -8;
+      const opacity = Math.max(0.12, 1 - Math.max(0, abs - 2.2) * 0.44);
+
+      card.style.transform =
+        `translate3d(${x}px,${y}px,0) rotateZ(${rotate}deg) rotateY(${rotateY}deg) scale(${scale})`;
+      card.style.opacity = opacity;
       card.style.zIndex = String(100 - Math.round(abs * 10));
-      card.classList.toggle('is-center', abs < 0.46);
-      card.tabIndex = abs < 0.46 ? 0 : -1;
+      card.classList.toggle('is-center', abs < 0.5);
+      card.tabIndex = abs < 0.5 ? 0 : -1;
     });
 
-    if (centerIndex !== lastCenterRef.current) {
-      lastCenterRef.current = centerIndex;
-      activeRef.current = centerIndex;
-      setActive(centerIndex);
-    }
-
-    if (settled && pendingIndexRef.current !== null) {
-      const index = pendingIndexRef.current;
-      pendingIndexRef.current = null;
-      requestAnimationFrame(() => {
-        setOpen(index);
-        openRef.current = index;
-      });
-    }
-
-    if (!settled) {
-      rafRef.current = requestAnimationFrame(render);
+    if (Math.abs(targetRef.current - phaseRef.current) > 0.0004) {
+      frameRef.current = requestAnimationFrame(render);
     } else {
-      rafRef.current = 0;
+      frameRef.current = 0;
     }
   };
 
-  const setTarget = (value) => {
-    targetRef.current = value;
-    if (!rafRef.current) rafRef.current = requestAnimationFrame(render);
+  const animateTo = (value) => {
+    targetRef.current = Math.max(0, Math.min(sakuraCards.length - 1, value));
+    if (!frameRef.current) frameRef.current = requestAnimationFrame(render);
   };
 
   useEffect(() => {
-    const stage = stageRef.current;
-    if (!stage) return undefined;
+    const preload = sakuraCards.map((card) => {
+      const image = new Image();
+      image.decoding = 'async';
+      image.src = card.image;
+      return image;
+    });
 
-    const warm = (index) => {
-      const item = sakuraCards[index];
-      if (!item) return;
-      const img = new Image();
-      img.decoding = 'async';
-      img.src = item.image;
-    };
-    [0, 1, 2].forEach(warm);
-
-    const onWheel = (event) => {
-      if (openRef.current !== null) return;
-      const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
-      if (!delta) return;
-      event.preventDefault();
-      event.stopPropagation();
-      const step = Math.max(-0.72, Math.min(0.72, delta * 0.0026));
-      setTarget(targetRef.current + step);
-    };
-
-    const onPointerDown = (event) => {
-      if (openRef.current !== null) return;
-      if (event.pointerType === 'mouse' && event.button !== 0) return;
-      pointerRef.current = {
-        id: event.pointerId,
-        x: event.clientX,
-        y: event.clientY,
-        lastX: event.clientX,
-        moved: false,
-      };
-      stage.setPointerCapture?.(event.pointerId);
-      stage.classList.add('is-dragging');
-    };
-
-    const onPointerMove = (event) => {
-      const pointer = pointerRef.current;
-      if (!pointer || pointer.id !== event.pointerId || openRef.current !== null) return;
-
-      const dx = event.clientX - pointer.lastX;
-      const dy = event.clientY - pointer.y;
-      if (Math.abs(event.clientX - pointer.x) + Math.abs(event.clientY - pointer.y) > 7) pointer.moved = true;
-
-      if (Math.abs(dx) > Math.max(2, Math.abs(dy) * 0.35)) {
-        event.preventDefault();
-        setTarget(targetRef.current - dx * 0.0065);
-        pointer.lastX = event.clientX;
-      }
-    };
-
-    const releasePointer = (event) => {
-      const pointer = pointerRef.current;
-      if (!pointer || pointer.id !== event.pointerId) return;
-      stage.releasePointerCapture?.(event.pointerId);
-      stage.classList.remove('is-dragging');
-
-      if (pointer.moved) {
-        targetRef.current = Math.round(targetRef.current);
-        if (!rafRef.current) rafRef.current = requestAnimationFrame(render);
-        stage.dataset.suppressClick = '1';
-        window.setTimeout(() => { delete stage.dataset.suppressClick; }, 100);
-      }
-      pointerRef.current = null;
-    };
-
-    const onClick = (event) => {
-      if (openRef.current !== null) return;
-      if (stage.dataset.suppressClick === '1') return;
-
-      const card = event.target.closest('.sakura-card');
-      if (!card || !stage.contains(card)) return;
-
-      const index = Number(card.dataset.index);
-      const slot = wrap(index - phaseRef.current, sakuraCards.length);
-
-      if (Math.abs(slot) > 0.46) {
-        pendingIndexRef.current = index;
-        setTarget(targetRef.current + slot);
-        return;
-      }
-
-      setOpen((current) => {
-        const next = current === index ? null : index;
-        openRef.current = next;
-        return next;
-      });
-    };
-
-    const onKeyDown = (event) => {
-      if (openRef.current !== null) {
-        if (event.key === 'Escape') {
-          event.preventDefault();
-          setOpen(null);
-          openRef.current = null;
-        }
-        return;
-      }
-
-      const current = activeRef.current;
-      let next = current;
-      if (event.key === 'ArrowLeft') next = Math.max(0, current - 1);
-      if (event.key === 'ArrowRight') next = Math.min(sakuraCards.length - 1, current + 1);
-      if (event.key === 'Home') next = 0;
-      if (event.key === 'End') next = sakuraCards.length - 1;
-
-      if (next !== current) {
-        event.preventDefault();
-        setTarget(next);
-        return;
-      }
-
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        setOpen(current);
-        openRef.current = current;
-      }
-    };
-
-    stage.addEventListener('wheel', onWheel, { passive: false, capture: true });
-    stage.addEventListener('pointerdown', onPointerDown, { capture: true });
-    stage.addEventListener('pointermove', onPointerMove, { passive: false, capture: true });
-    stage.addEventListener('pointerup', releasePointer, { capture: true });
-    stage.addEventListener('pointercancel', releasePointer, { capture: true });
-    stage.addEventListener('click', onClick, { capture: true });
-    stage.addEventListener('keydown', onKeyDown, { capture: true });
-
-    targetRef.current = 0;
-    phaseRef.current = 0;
-    lastCenterRef.current = -1;
-    activeRef.current = 0;
     render();
 
     return () => {
-      stage.removeEventListener('wheel', onWheel, true);
-      stage.removeEventListener('pointerdown', onPointerDown, true);
-      stage.removeEventListener('pointermove', onPointerMove, true);
-      stage.removeEventListener('pointerup', releasePointer, true);
-      stage.removeEventListener('pointercancel', releasePointer, true);
-      stage.removeEventListener('click', onClick, true);
-      stage.removeEventListener('keydown', onKeyDown, true);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = 0;
+      preload.forEach((image) => { image.onload = null; image.onerror = null; });
+      if (frameRef.current) cancelAnimationFrame(frameRef.current);
     };
   }, []);
 
   useEffect(() => {
-    if (open !== null) {
-      const preload = new Image();
-      preload.decoding = 'async';
-      preload.src = sakuraCards[open].image;
-    }
+    if (open === null) return undefined;
+    const onKey = (event) => {
+      if (event.key === 'Escape') setOpen(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
   }, [open]);
 
-  const closeOpen = (event) => {
-    event.stopPropagation();
-    setOpen(null);
-    openRef.current = null;
+  const onWheel = (event) => {
+    if (open !== null) return;
+    const delta = Math.abs(event.deltaY) >= Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
+    if (!delta) return;
+    event.preventDefault();
+    const amount = Math.max(-0.7, Math.min(0.7, delta * 0.0028));
+    animateTo(targetRef.current + amount);
+  };
+
+  const onPointerDown = (event) => {
+    if (open !== null) return;
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    dragRef.current = {
+      id: event.pointerId,
+      startX: event.clientX,
+      lastX: event.clientX,
+      moved: false,
+    };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  };
+
+  const onPointerMove = (event) => {
+    const drag = dragRef.current;
+    if (!drag || drag.id !== event.pointerId || open !== null) return;
+    const dx = event.clientX - drag.lastX;
+    if (Math.abs(event.clientX - drag.startX) > 7) drag.moved = true;
+    if (Math.abs(dx) > 1) {
+      event.preventDefault();
+      targetRef.current = Math.max(0, Math.min(sakuraCards.length - 1, targetRef.current - dx * 0.0065));
+      if (!frameRef.current) frameRef.current = requestAnimationFrame(render);
+      drag.lastX = event.clientX;
+    }
+  };
+
+  const onPointerUp = (event) => {
+    const drag = dragRef.current;
+    if (!drag || drag.id !== event.pointerId) return;
+    if (drag.moved) {
+      targetRef.current = Math.round(targetRef.current);
+      if (!frameRef.current) frameRef.current = requestAnimationFrame(render);
+    }
+    dragRef.current = null;
+    event.currentTarget.releasePointerCapture?.(event.pointerId);
+  };
+
+  const onCardClick = (index) => {
+    if (dragRef.current?.moved) {
+      dragRef.current.moved = false;
+      return;
+    }
+    const slot = wrap(index - phaseRef.current, sakuraCards.length);
+    if (Math.abs(slot) >= 0.5) {
+      animateTo(index);
+      return;
+    }
+    setOpen(current => current === index ? null : index);
   };
 
   return (
@@ -349,48 +248,54 @@ function SakuraCarousel() {
         <p>Scroll inside the gallery to move through the images. Bring one to the center, then click it to reveal the story, tools or work behind the image.</p>
       </div>
 
-      <div className={open !== null ? "sakura-stage is-open" : "sakura-stage"} ref={stageRef}>
-        <div className="sakura-stage-glow" aria-hidden="true" />
+      <div
+        className={'sakura-stage' + (open !== null ? ' is-open' : '')}
+        ref={stageRef}
+        onWheel={onWheel}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+      >
         <div className="sakura-track">
           {sakuraCards.map((card, index) => (
-            <article
+            <button
               key={card.number}
-              ref={(node) => { cardRefs.current[index] = node; }}
-              data-index={index}
-              className={active === index ? 'sakura-card is-center' : 'sakura-card'}
-              role="button"
-              tabIndex={active === index ? 0 : -1}
+              ref={(node) => { cardsRef.current[index] = node; }}
+              className={'sakura-card' + (active === index ? ' is-center' : '')}
+              type="button"
+              onClick={() => onCardClick(index)}
               aria-label={'Open ' + card.title}
+              tabIndex={active === index ? 0 : -1}
             >
               <div className="sakura-card-media">
-                <img
-                  src={card.image}
-                  alt=""
-                  loading={index < 3 ? 'eager' : 'lazy'}
-                  decoding="async"
-                  style={{ objectPosition: card.position }}
-                />
+                <img src={card.image} alt="" decoding="async" />
               </div>
               <div className="sakura-card-sheen" aria-hidden="true" />
               <span className="sakura-card-number">{card.number}</span>
               <div className="sakura-card-copy">
                 <small>{card.label}</small>
                 <strong>{card.title}</strong>
-                <em>{open === index ? 'OPEN' : active === index ? 'CLICK TO REVEAL' : 'BRING TO CENTER'}</em>
+                <em>{active === index ? 'CLICK TO REVEAL' : 'BRING TO CENTER'}</em>
               </div>
-            </article>
+            </button>
           ))}
         </div>
 
         <div className="sakura-stage-side">
-          <span className="sakura-live-dot" aria-hidden="true" />
+          <span className="sakura-live-dot" />
           <span>DRAG · WHEEL · CLICK</span>
         </div>
+
         <div className="sakura-stage-hud">
-          <b>{String(active + 1).padStart(2, '0')}</b><em>/</em><span>{String(sakuraCards.length).padStart(2, '0')}</span>
+          <b>{String(active + 1).padStart(2, '0')}</b><em>/</em><span>07</span>
         </div>
 
-        <div className={open !== null ? 'sakura-open is-open' : 'sakura-open'} aria-hidden={open === null}>
+        <div
+          className={'sakura-open' + (open !== null ? ' is-open' : '')}
+          aria-hidden={open === null}
+          onClick={(event) => { if (event.target === event.currentTarget) setOpen(null); }}
+        >
           {open !== null && (
             <>
               <div className="sakura-open-media">
@@ -408,7 +313,7 @@ function SakuraCarousel() {
                 </div>
                 <div className="sakura-open-foot">
                   <span>{sakuraCards[open].meta}</span>
-                  <button type="button" onClick={closeOpen}>CLOSE ×</button>
+                  <button type="button" onClick={() => setOpen(null)}>CLOSE ×</button>
                 </div>
               </div>
             </>
@@ -418,7 +323,7 @@ function SakuraCarousel() {
 
       <div className="sakura-index-footer">
         <span><i /> DRAG · WHEEL · CLICK</span>
-        <strong>{String(active + 1).padStart(2, '0')} <em>/</em> {String(sakuraCards.length).padStart(2, '0')}</strong>
+        <strong>{String(active + 1).padStart(2, '0')} <em>/</em> 07</strong>
       </div>
     </section>
   );
