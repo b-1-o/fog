@@ -348,7 +348,7 @@ function SakuraCarousel() {
         <p>Scroll inside the gallery to move through the images. Bring one to the center, then click it to reveal the story, tools or work behind the image.</p>
       </div>
 
-      <div className="sakura-stage" ref={stageRef}>
+      <div className={open !== null ? "sakura-stage is-open" : "sakura-stage"} ref={stageRef}>
         <div className="sakura-stage-glow" aria-hidden="true" />
         <div className="sakura-track">
           {sakuraCards.map((card, index) => (
