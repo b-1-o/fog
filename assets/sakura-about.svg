@@ -1,1 +1,49 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100"><rect width="900" height="1100" fill="#070707"/><g stroke="#e9a6b8" fill="none" stroke-width="3"><rect x="150" y="280" width="600" height="430"/><rect x="195" y="325" width="510" height="340"/><path d="M195 570L350 430L455 525L545 455L705 600"/></g><circle cx="450" cy="495" r="58" fill="#e9a6b8" opacity=".85"/><circle cx="450" cy="495" r="30" fill="#070707"/><text x="90" y="100" fill="#fff" font-family="Arial" font-size="22" letter-spacing="5">03 / THE PERSON BEHIND IT</text><text x="90" y="1010" fill="#e9a6b8" font-family="Arial" font-size="58" font-weight="700">ABOUT ME</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100">
+<defs>
+  <radialGradient id="glow" cx="50%" cy="42%" r="58%">
+    <stop offset="0" stop-color="#e9a6b8" stop-opacity=".22"/>
+    <stop offset=".55" stop-color="#e9a6b8" stop-opacity=".06"/>
+    <stop offset="1" stop-color="#070707" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#fff" stop-opacity=".10"/>
+    <stop offset=".5" stop-color="#fff" stop-opacity=".025"/>
+    <stop offset="1" stop-color="#e9a6b8" stop-opacity=".10"/>
+  </linearGradient>
+</defs>
+<rect width="900" height="1100" fill="#070707"/>
+<rect width="900" height="1100" fill="url(#glow)"/>
+
+<!-- editorial frame -->
+<rect x="105" y="185" width="690" height="620" rx="8" fill="url(#glass)" stroke="#fff" stroke-opacity=".16"/>
+<path d="M105 250H795" stroke="#fff" stroke-opacity=".12"/>
+<circle cx="140" cy="218" r="6" fill="#e9a6b8"/>
+<circle cx="162" cy="218" r="6" fill="#fff" fill-opacity=".25"/>
+<circle cx="184" cy="218" r="6" fill="#fff" fill-opacity=".12"/>
+
+<!-- abstract portrait / person behind the work -->
+<circle cx="450" cy="405" r="108" fill="#e9a6b8" fill-opacity=".12" stroke="#e9a6b8" stroke-opacity=".7" stroke-width="2"/>
+<circle cx="450" cy="380" r="48" fill="#e9a6b8" fill-opacity=".72"/>
+<path d="M355 575C370 490 530 490 545 575" fill="#e9a6b8" fill-opacity=".58"/>
+<path d="M325 620C365 540 535 540 575 620" fill="none" stroke="#e9a6b8" stroke-opacity=".35" stroke-width="2"/>
+
+<!-- interface details -->
+<rect x="185" y="675" width="150" height="7" rx="3" fill="#fff" fill-opacity=".5"/>
+<rect x="185" y="698" width="250" height="5" rx="2" fill="#fff" fill-opacity=".14"/>
+<rect x="185" y="716" width="205" height="5" rx="2" fill="#e9a6b8" fill-opacity=".28"/>
+<rect x="565" y="670" width="115" height="52" rx="26" fill="#e9a6b8" fill-opacity=".10" stroke="#e9a6b8" stroke-opacity=".5"/>
+<circle cx="590" cy="696" r="6" fill="#e9a6b8"/>
+<path d="M610 696H655" stroke="#fff" stroke-opacity=".5" stroke-width="3"/>
+
+<!-- small sakura constellation -->
+<g fill="#e9a6b8">
+  <circle cx="690" cy="315" r="7"/>
+  <circle cx="730" cy="350" r="4"/>
+  <circle cx="665" cy="365" r="5"/>
+  <circle cx="710" cy="390" r="3"/>
+</g>
+<path d="M665 365L690 315L730 350L710 390" fill="none" stroke="#e9a6b8" stroke-opacity=".25"/>
+
+<text x="90" y="100" fill="#fff" font-family="Arial,sans-serif" font-size="22" letter-spacing="5">03 / THE PERSON BEHIND IT</text>
+<text x="90" y="1010" fill="#e9a6b8" font-family="Arial,sans-serif" font-size="58" font-weight="700">ABOUT ME</text>
+</svg>
